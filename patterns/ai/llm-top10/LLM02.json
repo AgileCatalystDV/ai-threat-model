@@ -1,0 +1,39 @@
+{
+  "id": "LLM02",
+  "category": "LLM02",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Insecure Output Handling",
+  "description": "Insecure output handling occurs when LLM outputs are not validated or sanitized before being used, leading to XSS, CSRF, or other attacks.",
+  "detection_patterns": [
+    "LLM output used directly in HTML/JavaScript",
+    "No output validation or sanitization",
+    "LLM output used in security-sensitive contexts",
+    "Output embedded without encoding"
+  ],
+  "attack_vectors": [
+    "XSS via malicious LLM output",
+    "CSRF via LLM-generated URLs",
+    "Code injection via LLM output",
+    "Open redirect attacks"
+  ],
+  "mitigations": [
+    {
+      "id": "output-validation",
+      "description": "Validate and sanitize all LLM outputs",
+      "implementation": "Use output encoding and validation libraries. Implement content security policies.",
+      "priority": "high"
+    },
+    {
+      "id": "context-aware-output",
+      "description": "Apply context-aware output handling",
+      "implementation": "Use appropriate encoding based on output context (HTML, JavaScript, SQL, etc.).",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM02: Insecure Output Handling",
+      "url": "https://genai.owasp.org/llm-top-10/llm02-insecure-output-handling/"
+    }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2026-02-07T20:36:53.594519",
+    "author": "Example User",
+    "description": "Simple LLM application example for testing"
+  },
+  "system": {
+    "name": "Simple LLM Chat App",
+    "type": "llm-app",
+    "threat_modeling_framework": "owasp-llm-top10-2025",
+    "components": [
+      {
+        "id": "frontend",
+        "name": "Web Frontend",
+        "type": "web-server",
+        "capabilities": [
+          "user-input",
+          "display-output"
+        ],
+        "trust_level": "untrusted",
+        "description": "React-based web frontend"
+      },
+      {
+        "id": "api-gateway",
+        "name": "API Gateway",
+        "type": "api-endpoint",
+        "capabilities": [
+          "request-routing",
+          "authentication"
+        ],
+        "trust_level": "internal",
+        "description": "API gateway handling requests"
+      },
+      {
+        "id": "llm-service",
+        "name": "LLM Service",
+        "type": "llm",
+        "capabilities": [
+          "text-generation",
+          "conversation"
+        ],
+        "trust_level": "internal",
+        "description": "OpenAI GPT-4 based LLM service"
+      },
+      {
+        "id": "user-db",
+        "name": "User Database",
+        "type": "database",
+        "capabilities": [
+          "user-storage",
+          "session-storage"
+        ],
+        "trust_level": "internal",
+        "description": "PostgreSQL database for user data"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "frontend",
+        "to": "api-gateway",
+        "data_type": "user-prompt",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "api-gateway",
+        "to": "llm-service",
+        "data_type": "prompt",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "llm-service",
+        "to": "api-gateway",
+        "data_type": "llm-response",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "api-gateway",
+        "to": "user-db",
+        "data_type": "user-data",
+        "classification": "confidential",
+        "protocol": "TCP",
+        "encrypted": false
+      }
+    ]
+  },
+  "threats": [
+    {
+      "id": "efbf6a02-8dc2-475f-99f1-6809ff0335d9",
+      "category": "LLM01",
+      "framework": "owasp-llm-top10-2025",
+      "title": "Prompt Injection",
+      "description": "Prompt injection occurs when untrusted input is embedded in a prompt, causing the LLM to execute unintended instructions or expose data. This can happen through direct injection via user input or indirect injection through external data sources.",
+      "severity": "critical",
+      "affected_components": [
+        "llm-service"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Direct injection via user input",
+        "Indirect injection via external data sources",
+        "Second-order injection through stored data",
+        "Jailbreak prompts",
+        "Prompt leaking attacks"
+      ],
+      "detection_patterns": [
+        "User input directly concatenated to system prompts",
+        "No input sanitization or validation",
+        "External data sources used in prompts without validation",
+        "Instruction-like patterns in untrusted content",
+        "Attempts to override system prompts"
+      ],
+      "mitigations": [
+        {
+          "id": "input-validation",
+          "description": "Validate and sanitize all user inputs",
+          "implementation": "Use input validation libraries and sanitize special characters. Implement allowlists for expected input formats.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "prompt-separation",
+          "description": "Separate user input from system prompts",
+          "implementation": "Use structured prompts with clear boundaries. Implement prompt templates with placeholders.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "output-filtering",
+          "description": "Filter and validate LLM outputs",
+          "implementation": "Implement output validation to detect and block injection attempts.",
+          "status": "proposed",
+          "priority": "medium"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "49736066-e61a-40bd-95a9-489d4d1ba19c",
+      "category": "LLM02",
+      "framework": "owasp-llm-top10-2025",
+      "title": "Insecure Output Handling",
+      "description": "Insecure output handling occurs when LLM outputs are not validated or sanitized before being used, leading to XSS, CSRF, or other attacks.",
+      "severity": "high",
+      "affected_components": [
+        "llm-service"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "XSS via malicious LLM output",
+        "CSRF via LLM-generated URLs",
+        "Code injection via LLM output",
+        "Open redirect attacks"
+      ],
+      "detection_patterns": [
+        "LLM output used directly in HTML/JavaScript",
+        "No output validation or sanitization",
+        "LLM output used in security-sensitive contexts",
+        "Output embedded without encoding"
+      ],
+      "mitigations": [
+        {
+          "id": "output-validation",
+          "description": "Validate and sanitize all LLM outputs",
+          "implementation": "Use output encoding and validation libraries. Implement content security policies.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "context-aware-output",
+          "description": "Apply context-aware output handling",
+          "implementation": "Use appropriate encoding based on output context (HTML, JavaScript, SQL, etc.).",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "a618610e-f976-46d4-9782-b198244851ea",
+      "category": "LLM06",
+      "framework": "owasp-llm-top10-2025",
+      "title": "Sensitive Information Disclosure",
+      "description": "Sensitive information disclosure occurs when the LLM reveals confidential data in its outputs.",
+      "severity": "critical",
+      "affected_components": [
+        "llm-service"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Prompting for sensitive data",
+        "Inference attacks"
+      ],
+      "detection_patterns": [
+        "Training data contains sensitive information",
+        "No data filtering or redaction",
+        "LLM has access to sensitive data sources"
+      ],
+      "mitigations": [
+        {
+          "id": "data-filtering",
+          "description": "Filter sensitive data from training and inference",
+          "implementation": "Implement data redaction and filtering",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "bc140052-2d98-4009-acfa-32d46bee1f0d",
+      "category": "LLM09",
+      "framework": "owasp-llm-top10-2025",
+      "title": "Overreliance",
+      "description": "Overreliance occurs when users or systems trust LLM outputs too much without verification.",
+      "severity": "medium",
+      "affected_components": [
+        "llm-service"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Misinformation propagation",
+        "Decision manipulation"
+      ],
+      "detection_patterns": [
+        "LLM outputs used without verification",
+        "No fact-checking or validation",
+        "Critical decisions based solely on LLM output"
+      ],
+      "mitigations": [
+        {
+          "id": "output-verification",
+          "description": "Verify LLM outputs before use",
+          "implementation": "Implement fact-checking and validation",
+          "status": "proposed",
+          "priority": "medium"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "48d87d85-2a48-4ae0-82b5-ba91df0b0afc",
+      "category": "LLM06",
+      "framework": "owasp-llm-top10-2025",
+      "title": "Sensitive Information Disclosure",
+      "description": "Sensitive data (confidential) is transmitted unencrypted between api-gateway and user-db",
+      "severity": "high",
+      "affected_components": [],
+      "affected_data_flows": [
+        "api-gateway->user-db"
+      ],
+      "attack_vectors": [],
+      "detection_patterns": [],
+      "mitigations": [],
+      "risk_score": null,
+      "references": []
+    }
+  ],
+  "visualization": null
+}

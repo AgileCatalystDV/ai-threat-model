@@ -1,0 +1,47 @@
+{
+  "id": "LLM01",
+  "category": "LLM01",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Prompt Injection",
+  "description": "Prompt injection occurs when untrusted input is embedded in a prompt, causing the LLM to execute unintended instructions or expose data. This can happen through direct injection via user input or indirect injection through external data sources.",
+  "detection_patterns": [
+    "User input directly concatenated to system prompts",
+    "No input sanitization or validation",
+    "External data sources used in prompts without validation",
+    "Instruction-like patterns in untrusted content",
+    "Attempts to override system prompts"
+  ],
+  "attack_vectors": [
+    "Direct injection via user input",
+    "Indirect injection via external data sources",
+    "Second-order injection through stored data",
+    "Jailbreak prompts",
+    "Prompt leaking attacks"
+  ],
+  "mitigations": [
+    {
+      "id": "input-validation",
+      "description": "Validate and sanitize all user inputs",
+      "implementation": "Use input validation libraries and sanitize special characters. Implement allowlists for expected input formats.",
+      "priority": "high"
+    },
+    {
+      "id": "prompt-separation",
+      "description": "Separate user input from system prompts",
+      "implementation": "Use structured prompts with clear boundaries. Implement prompt templates with placeholders.",
+      "priority": "high"
+    },
+    {
+      "id": "output-filtering",
+      "description": "Filter and validate LLM outputs",
+      "implementation": "Implement output validation to detect and block injection attempts.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM01: Prompt Injection",
+      "url": "https://genai.owasp.org/llm-top-10/llm01-prompt-injection/"
+    }
+  ]
+}

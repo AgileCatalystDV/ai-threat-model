@@ -1,0 +1,45 @@
+{
+  "id": "AGENTIC02",
+  "category": "AGENTIC02",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Insecure Tool Use",
+  "description": "Insecure tool use occurs when agents use tools or APIs without proper security controls. This can lead to unauthorized actions or privilege escalation.",
+  "detection_patterns": [
+    "Agent can execute arbitrary tools",
+    "No authorization checks before tool execution",
+    "Tools have excessive permissions",
+    "No validation of tool inputs"
+  ],
+  "attack_vectors": [
+    "Unauthorized tool execution",
+    "Privilege escalation via tools",
+    "Malicious tool invocation",
+    "Tool parameter manipulation"
+  ],
+  "mitigations": [
+    {
+      "id": "tool-authorization",
+      "description": "Implement authorization for tool execution",
+      "implementation": "Use least privilege and authorization checks. Implement role-based access control for tools.",
+      "priority": "high"
+    },
+    {
+      "id": "tool-sandboxing",
+      "description": "Sandbox tool execution",
+      "implementation": "Isolate tool execution environments. Use containers or VMs for tool execution.",
+      "priority": "high"
+    },
+    {
+      "id": "input-validation",
+      "description": "Validate tool inputs",
+      "implementation": "Validate and sanitize all inputs passed to tools.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC02: Insecure Tool Use",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    }
+  ]
+}

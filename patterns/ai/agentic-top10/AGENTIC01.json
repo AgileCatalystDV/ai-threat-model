@@ -1,0 +1,45 @@
+{
+  "id": "AGENTIC01",
+  "category": "AGENTIC01",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Agent Manipulation",
+  "description": "Agent manipulation occurs when attackers influence agent behavior through malicious inputs or environment manipulation. This can lead to unauthorized actions or data exposure.",
+  "detection_patterns": [
+    "Agent receives untrusted input without validation",
+    "No input sanitization for agent prompts",
+    "Agent state can be manipulated externally",
+    "No validation of agent decisions"
+  ],
+  "attack_vectors": [
+    "Prompt injection to manipulate agent behavior",
+    "Environment manipulation",
+    "State corruption attacks",
+    "Goal hijacking"
+  ],
+  "mitigations": [
+    {
+      "id": "input-validation",
+      "description": "Validate and sanitize all agent inputs",
+      "implementation": "Implement input validation and sanitization for all agent inputs.",
+      "priority": "high"
+    },
+    {
+      "id": "state-protection",
+      "description": "Protect agent state from unauthorized modification",
+      "implementation": "Implement state validation and integrity checks. Use immutable state where possible.",
+      "priority": "high"
+    },
+    {
+      "id": "decision-validation",
+      "description": "Validate agent decisions before execution",
+      "implementation": "Implement decision validation and approval workflows for critical actions.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC01: Agent Manipulation",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    }
+  ]
+}

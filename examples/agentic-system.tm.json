@@ -1,0 +1,444 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2026-02-07T20:37:32.658259",
+    "author": "Example User",
+    "description": "Agentic system example for testing"
+  },
+  "system": {
+    "name": "Research Assistant Agent",
+    "type": "agentic-system",
+    "threat_modeling_framework": "owasp-agentic-top10-2026",
+    "components": [
+      {
+        "id": "research-agent",
+        "name": "Research Agent",
+        "type": "agent",
+        "capabilities": [
+          "web-search",
+          "document-analysis",
+          "report-generation"
+        ],
+        "trust_level": "internal",
+        "description": "Main research agent"
+      },
+      {
+        "id": "llm-backend",
+        "name": "LLM Backend",
+        "type": "llm",
+        "capabilities": [
+          "reasoning",
+          "text-generation"
+        ],
+        "trust_level": "internal",
+        "description": "LLM backend for agent reasoning"
+      },
+      {
+        "id": "web-search-tool",
+        "name": "Web Search Tool",
+        "type": "tool",
+        "capabilities": [
+          "web-search"
+        ],
+        "trust_level": "untrusted",
+        "description": "External web search tool"
+      },
+      {
+        "id": "file-system-tool",
+        "name": "File System Tool",
+        "type": "tool",
+        "capabilities": [
+          "read-file",
+          "write-file"
+        ],
+        "trust_level": "internal",
+        "description": "File system access tool"
+      },
+      {
+        "id": "agent-memory",
+        "name": "Agent Memory",
+        "type": "memory",
+        "capabilities": [
+          "store-context",
+          "retrieve-context"
+        ],
+        "trust_level": "internal",
+        "description": "Vector database for agent memory"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "research-agent",
+        "to": "llm-backend",
+        "data_type": "reasoning-request",
+        "classification": "internal",
+        "protocol": "HTTP",
+        "encrypted": false
+      },
+      {
+        "from": "llm-backend",
+        "to": "research-agent",
+        "data_type": "reasoning-response",
+        "classification": "internal",
+        "protocol": "HTTP",
+        "encrypted": false
+      },
+      {
+        "from": "research-agent",
+        "to": "web-search-tool",
+        "data_type": "search-query",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "research-agent",
+        "to": "file-system-tool",
+        "data_type": "file-operation",
+        "classification": "confidential",
+        "protocol": "local",
+        "encrypted": false
+      },
+      {
+        "from": "research-agent",
+        "to": "agent-memory",
+        "data_type": "context-data",
+        "classification": "internal",
+        "protocol": "TCP",
+        "encrypted": false
+      }
+    ]
+  },
+  "threats": [
+    {
+      "id": "af1a9f69-d87c-4ed3-848c-fff15264ba0d",
+      "category": "AGENTIC01",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Agent Manipulation",
+      "description": "Agent manipulation occurs when attackers influence agent behavior through malicious inputs or environment manipulation. This can lead to unauthorized actions or data exposure.",
+      "severity": "critical",
+      "affected_components": [
+        "research-agent"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Prompt injection to manipulate agent behavior",
+        "Environment manipulation",
+        "State corruption attacks",
+        "Goal hijacking"
+      ],
+      "detection_patterns": [
+        "Agent receives untrusted input without validation",
+        "No input sanitization for agent prompts",
+        "Agent state can be manipulated externally",
+        "No validation of agent decisions"
+      ],
+      "mitigations": [
+        {
+          "id": "input-validation",
+          "description": "Validate and sanitize all agent inputs",
+          "implementation": "Implement input validation and sanitization for all agent inputs.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "state-protection",
+          "description": "Protect agent state from unauthorized modification",
+          "implementation": "Implement state validation and integrity checks. Use immutable state where possible.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "decision-validation",
+          "description": "Validate agent decisions before execution",
+          "implementation": "Implement decision validation and approval workflows for critical actions.",
+          "status": "proposed",
+          "priority": "medium"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "cf9ed080-905f-467c-bfff-eea9effa0359",
+      "category": "AGENTIC02",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Tool Use",
+      "description": "Insecure tool use occurs when agents use tools or APIs without proper security controls. This can lead to unauthorized actions or privilege escalation.",
+      "severity": "high",
+      "affected_components": [
+        "research-agent"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Unauthorized tool execution",
+        "Privilege escalation via tools",
+        "Malicious tool invocation",
+        "Tool parameter manipulation"
+      ],
+      "detection_patterns": [
+        "Agent can execute arbitrary tools",
+        "No authorization checks before tool execution",
+        "Tools have excessive permissions",
+        "No validation of tool inputs"
+      ],
+      "mitigations": [
+        {
+          "id": "tool-authorization",
+          "description": "Implement authorization for tool execution",
+          "implementation": "Use least privilege and authorization checks. Implement role-based access control for tools.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "tool-sandboxing",
+          "description": "Sandbox tool execution",
+          "implementation": "Isolate tool execution environments. Use containers or VMs for tool execution.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "input-validation",
+          "description": "Validate tool inputs",
+          "implementation": "Validate and sanitize all inputs passed to tools.",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "22d2d825-9c6a-4b66-b753-f4d822ebcbd9",
+      "category": "AGENTIC05",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Memory Management",
+      "description": "Insecure memory management occurs when agent memory is not properly protected or validated.",
+      "severity": "high",
+      "affected_components": [
+        "research-agent"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Memory corruption attacks",
+        "Unauthorized memory access"
+      ],
+      "detection_patterns": [
+        "Memory accessible without authorization",
+        "No memory validation",
+        "Memory can be corrupted"
+      ],
+      "mitigations": [
+        {
+          "id": "memory-protection",
+          "description": "Protect agent memory",
+          "implementation": "Implement memory access controls and validation",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "8b747621-678a-4a54-8cd8-858f5752294b",
+      "category": "AGENTIC06",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insufficient Agent Isolation",
+      "description": "Insufficient agent isolation occurs when agents can interfere with each other or access shared resources insecurely.",
+      "severity": "medium",
+      "affected_components": [
+        "research-agent"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Cross-agent attacks",
+        "Resource interference"
+      ],
+      "detection_patterns": [
+        "Agents share resources without isolation",
+        "No sandboxing between agents",
+        "Agents can access other agents' data"
+      ],
+      "mitigations": [
+        {
+          "id": "agent-isolation",
+          "description": "Isolate agents from each other",
+          "implementation": "Implement sandboxing and resource isolation",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "0d4e3554-e601-4e5c-a4bd-86164f2ae487",
+      "category": "AGENTIC02",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Tool Use",
+      "description": "Insecure tool use occurs when agents use tools or APIs without proper security controls. This can lead to unauthorized actions or privilege escalation.",
+      "severity": "high",
+      "affected_components": [
+        "web-search-tool"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Unauthorized tool execution",
+        "Privilege escalation via tools",
+        "Malicious tool invocation",
+        "Tool parameter manipulation"
+      ],
+      "detection_patterns": [
+        "Agent can execute arbitrary tools",
+        "No authorization checks before tool execution",
+        "Tools have excessive permissions",
+        "No validation of tool inputs"
+      ],
+      "mitigations": [
+        {
+          "id": "tool-authorization",
+          "description": "Implement authorization for tool execution",
+          "implementation": "Use least privilege and authorization checks. Implement role-based access control for tools.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "tool-sandboxing",
+          "description": "Sandbox tool execution",
+          "implementation": "Isolate tool execution environments. Use containers or VMs for tool execution.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "input-validation",
+          "description": "Validate tool inputs",
+          "implementation": "Validate and sanitize all inputs passed to tools.",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "9261ad7e-213f-4cca-a92c-a552c06e29fb",
+      "category": "AGENTIC02",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Tool Use",
+      "description": "Insecure tool use occurs when agents use tools or APIs without proper security controls. This can lead to unauthorized actions or privilege escalation.",
+      "severity": "high",
+      "affected_components": [
+        "file-system-tool"
+      ],
+      "affected_data_flows": [],
+      "attack_vectors": [
+        "Unauthorized tool execution",
+        "Privilege escalation via tools",
+        "Malicious tool invocation",
+        "Tool parameter manipulation"
+      ],
+      "detection_patterns": [
+        "Agent can execute arbitrary tools",
+        "No authorization checks before tool execution",
+        "Tools have excessive permissions",
+        "No validation of tool inputs"
+      ],
+      "mitigations": [
+        {
+          "id": "tool-authorization",
+          "description": "Implement authorization for tool execution",
+          "implementation": "Use least privilege and authorization checks. Implement role-based access control for tools.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "tool-sandboxing",
+          "description": "Sandbox tool execution",
+          "implementation": "Isolate tool execution environments. Use containers or VMs for tool execution.",
+          "status": "proposed",
+          "priority": "high"
+        },
+        {
+          "id": "input-validation",
+          "description": "Validate tool inputs",
+          "implementation": "Validate and sanitize all inputs passed to tools.",
+          "status": "proposed",
+          "priority": "high"
+        }
+      ],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "a64dd137-acd8-4e7f-8608-9cec1ca05c9c",
+      "category": "AGENTIC07",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Communication",
+      "description": "Agent communication between research-agent and llm-backend is not encrypted",
+      "severity": "high",
+      "affected_components": [],
+      "affected_data_flows": [
+        "research-agent->llm-backend"
+      ],
+      "attack_vectors": [],
+      "detection_patterns": [],
+      "mitigations": [],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "456510d2-c125-4f2b-85d9-09ab884054ee",
+      "category": "AGENTIC07",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Communication",
+      "description": "Agent communication between llm-backend and research-agent is not encrypted",
+      "severity": "high",
+      "affected_components": [],
+      "affected_data_flows": [
+        "llm-backend->research-agent"
+      ],
+      "attack_vectors": [],
+      "detection_patterns": [],
+      "mitigations": [],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "ffa4436d-9950-47d4-8ff5-739240cb821f",
+      "category": "AGENTIC07",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Communication",
+      "description": "Agent communication between research-agent and file-system-tool is not encrypted",
+      "severity": "high",
+      "affected_components": [],
+      "affected_data_flows": [
+        "research-agent->file-system-tool"
+      ],
+      "attack_vectors": [],
+      "detection_patterns": [],
+      "mitigations": [],
+      "risk_score": null,
+      "references": []
+    },
+    {
+      "id": "fe1a9e71-966e-497d-8850-26860fe46607",
+      "category": "AGENTIC07",
+      "framework": "owasp-agentic-top10-2026",
+      "title": "Insecure Communication",
+      "description": "Agent communication between research-agent and agent-memory is not encrypted",
+      "severity": "high",
+      "affected_components": [],
+      "affected_data_flows": [
+        "research-agent->agent-memory"
+      ],
+      "attack_vectors": [],
+      "detection_patterns": [],
+      "mitigations": [],
+      "risk_score": null,
+      "references": []
+    }
+  ],
+  "visualization": null
+}

@@ -1,0 +1,428 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/ai-threat-model/schemas/threat-model-schema.json",
+  "title": "Threat Model",
+  "description": "Universal threat model schema supporting multiple system types and frameworks",
+  "type": "object",
+  "required": ["metadata", "system"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version (e.g., '1.0.0')"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when threat model was created"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 timestamp when threat model was last updated"
+        },
+        "author": {
+          "type": "string",
+          "description": "Author or team name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the threat model"
+        }
+      }
+    },
+    "system": {
+      "type": "object",
+      "required": ["name", "type", "threat_modeling_framework"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the system being modeled"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "llm-app",
+            "agentic-system",
+            "multi-agent",
+            "mcp-server",
+            "web-app",
+            "mobile-app",
+            "api",
+            "microservices",
+            "cloud-infrastructure"
+          ],
+          "description": "Type of system being modeled"
+        },
+        "threat_modeling_framework": {
+          "type": "string",
+          "enum": [
+            "owasp-llm-top10-2025",
+            "owasp-agentic-top10-2026",
+            "owasp-top10-2021",
+            "owasp-mobile-top10",
+            "owasp-api-top10",
+            "stride",
+            "dread",
+            "pasta",
+            "trike",
+            "custom"
+          ],
+          "description": "Threat modeling framework being used"
+        },
+        "components": {
+          "type": "array",
+          "description": "List of system components",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "type"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the component"
+              },
+              "name": {
+                "type": "string",
+                "description": "Human-readable name of the component"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "llm",
+                  "agent",
+                  "tool",
+                  "memory",
+                  "mcp-server",
+                  "database",
+                  "web-server",
+                  "api-endpoint",
+                  "mobile-app",
+                  "browser",
+                  "authentication-service",
+                  "authorization-service",
+                  "cache",
+                  "message-queue",
+                  "load-balancer",
+                  "cdn",
+                  "firewall"
+                ],
+                "description": "Type of component"
+              },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of capabilities this component has"
+              },
+              "trust_level": {
+                "type": "string",
+                "enum": ["untrusted", "internal", "privileged", "system"],
+                "default": "untrusted",
+                "description": "Trust level of the component"
+              },
+              "description": {
+                "type": "string",
+                "description": "Description of the component"
+              }
+            }
+          }
+        },
+        "data_flows": {
+          "type": "array",
+          "description": "Data flows between components",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": {
+                "type": "string",
+                "description": "Component ID where data originates"
+              },
+              "to": {
+                "type": "string",
+                "description": "Component ID where data flows to"
+              },
+              "data_type": {
+                "type": "string",
+                "description": "Type of data being transmitted"
+              },
+              "classification": {
+                "type": "string",
+                "enum": ["public", "internal", "confidential", "restricted"],
+                "default": "internal",
+                "description": "Data classification level"
+              },
+              "protocol": {
+                "type": "string",
+                "description": "Protocol used for data transmission (e.g., HTTP, HTTPS, WebSocket)"
+              },
+              "encrypted": {
+                "type": "boolean",
+                "default": false,
+                "description": "Whether data is encrypted in transit"
+              }
+            }
+          }
+        }
+      }
+    },
+    "threats": {
+      "type": "array",
+      "description": "List of identified threats",
+      "items": {
+        "type": "object",
+        "required": ["id", "category", "framework", "title"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the threat"
+          },
+          "category": {
+            "type": "string",
+            "description": "Threat category based on framework. Can be OWASP Top 10 codes (A01-A10), LLM codes (LLM01-LLM10), Agentic codes (AGENTIC01-AGENTIC10), STRIDE categories, or custom."
+          },
+          "framework": {
+            "type": "string",
+            "enum": [
+              "owasp-llm-top10-2025",
+              "owasp-agentic-top10-2026",
+              "owasp-top10-2021",
+              "owasp-mobile-top10",
+              "owasp-api-top10",
+              "stride",
+              "dread",
+              "pasta",
+              "trike",
+              "custom"
+            ],
+            "description": "Framework this threat belongs to"
+          },
+          "title": {
+            "type": "string",
+            "description": "Short title of the threat"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the threat"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "Severity level of the threat"
+          },
+          "affected_components": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of component IDs affected by this threat"
+          },
+          "affected_data_flows": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of data flow IDs affected by this threat"
+          },
+          "attack_vectors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of attack vectors for this threat"
+          },
+          "detection_patterns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Patterns that can be used to detect this threat"
+          },
+          "mitigations": {
+            "type": "array",
+            "description": "List of mitigation strategies",
+            "items": {
+              "type": "object",
+              "required": ["id", "description"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique identifier for the mitigation"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the mitigation"
+                },
+                "implementation": {
+                  "type": "string",
+                  "description": "Implementation details or code examples"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["proposed", "implemented", "verified"],
+                  "default": "proposed",
+                  "description": "Status of the mitigation"
+                },
+                "priority": {
+                  "type": "string",
+                  "enum": ["high", "medium", "low"],
+                  "description": "Priority for implementing this mitigation"
+                }
+              }
+            }
+          },
+          "risk_score": {
+            "type": "object",
+            "description": "Risk score using DREAD methodology",
+            "properties": {
+              "damage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Damage if threat is exploited (0-10)"
+              },
+              "reproducibility": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "How easy to reproduce (0-10)"
+              },
+              "exploitability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "How easy to exploit (0-10)"
+              },
+              "affected_users": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Number of users affected (0-10)"
+              },
+              "discoverability": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "How easy to discover (0-10)"
+              },
+              "calculated": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 10,
+                "description": "Calculated DREAD score (average)"
+              }
+            }
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            },
+            "description": "References to documentation or resources"
+          }
+        }
+      }
+    },
+    "visualization": {
+      "type": "object",
+      "description": "Visualization data for UI rendering",
+      "properties": {
+        "layout": {
+          "type": "string",
+          "enum": ["hierarchical", "force-directed", "circular"],
+          "default": "hierarchical",
+          "description": "Layout algorithm to use"
+        },
+        "nodes": {
+          "type": "array",
+          "description": "Node positions and properties",
+          "items": {
+            "type": "object",
+            "required": ["id"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Component ID"
+              },
+              "x": {
+                "type": "number",
+                "description": "X coordinate for visualization"
+              },
+              "y": {
+                "type": "number",
+                "description": "Y coordinate for visualization"
+              },
+              "type": {
+                "type": "string",
+                "description": "Visual type/shape of the node"
+              },
+              "label": {
+                "type": "string",
+                "description": "Display label"
+              },
+              "threats": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of threat IDs affecting this component"
+              },
+              "risk_level": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low", "none"],
+                "description": "Overall risk level for this component"
+              }
+            }
+          }
+        },
+        "edges": {
+          "type": "array",
+          "description": "Edge/connection data for visualization",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": {
+                "type": "string",
+                "description": "Source component ID"
+              },
+              "to": {
+                "type": "string",
+                "description": "Target component ID"
+              },
+              "label": {
+                "type": "string",
+                "description": "Edge label"
+              },
+              "threats": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "List of threat IDs affecting this data flow"
+              },
+              "data_classification": {
+                "type": "string",
+                "enum": ["public", "internal", "confidential", "restricted"],
+                "description": "Data classification for this flow"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

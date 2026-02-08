@@ -1,0 +1,115 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2025-02-07T10:00:00Z",
+    "author": "Example User",
+    "description": "Multi-agent system example for testing"
+  },
+  "system": {
+    "name": "Distributed Research System",
+    "type": "multi-agent",
+    "threat_modeling_framework": "custom",
+    "components": [
+      {
+        "id": "orchestrator",
+        "name": "Orchestrator",
+        "type": "agent",
+        "capabilities": ["coordination", "task-distribution"],
+        "trust_level": "privileged",
+        "description": "Main orchestrator coordinating agents"
+      },
+      {
+        "id": "research-agent-1",
+        "name": "Research Agent 1",
+        "type": "agent",
+        "capabilities": ["web-search", "document-analysis"],
+        "trust_level": "internal",
+        "description": "First research agent"
+      },
+      {
+        "id": "research-agent-2",
+        "name": "Research Agent 2",
+        "type": "agent",
+        "capabilities": ["web-search", "document-analysis"],
+        "trust_level": "internal",
+        "description": "Second research agent"
+      },
+      {
+        "id": "synthesis-agent",
+        "name": "Synthesis Agent",
+        "type": "agent",
+        "capabilities": ["synthesis", "report-generation"],
+        "trust_level": "internal",
+        "description": "Agent that synthesizes research results"
+      },
+      {
+        "id": "shared-memory",
+        "name": "Shared Memory",
+        "type": "memory",
+        "capabilities": ["store-results", "retrieve-results"],
+        "trust_level": "internal",
+        "description": "Shared memory for agent coordination"
+      },
+      {
+        "id": "llm-backend",
+        "name": "LLM Backend",
+        "type": "llm",
+        "capabilities": ["reasoning", "text-generation"],
+        "trust_level": "internal",
+        "description": "LLM backend for agent reasoning"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "orchestrator",
+        "to": "research-agent-1",
+        "data_type": "task-assignment",
+        "classification": "internal",
+        "protocol": "HTTP",
+        "encrypted": false
+      },
+      {
+        "from": "orchestrator",
+        "to": "research-agent-2",
+        "data_type": "task-assignment",
+        "classification": "internal",
+        "protocol": "HTTP",
+        "encrypted": false
+      },
+      {
+        "from": "research-agent-1",
+        "to": "shared-memory",
+        "data_type": "research-results",
+        "classification": "internal",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "research-agent-2",
+        "to": "shared-memory",
+        "data_type": "research-results",
+        "classification": "internal",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "shared-memory",
+        "to": "synthesis-agent",
+        "data_type": "research-results",
+        "classification": "internal",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "synthesis-agent",
+        "to": "llm-backend",
+        "data_type": "synthesis-request",
+        "classification": "internal",
+        "protocol": "HTTP",
+        "encrypted": false
+      }
+    ]
+  },
+  "threats": []
+}
