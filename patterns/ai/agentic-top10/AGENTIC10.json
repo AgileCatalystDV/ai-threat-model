@@ -1,0 +1,83 @@
+{
+  "id": "AGENTIC10",
+  "category": "AGENTIC10",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Rogue Agents",
+  "description": "A Rogue Agent is an AI that drifts from its intended behavior and acts with harmful autonomy. It becomes the ultimate insider threat: authorized, trusted, but misaligned. Once its behavior diverges, detection is extremely difficult. No attacker required—the agent itself becomes misaligned.",
+  "detection_patterns": [
+    "Hidden goal drift caused by earlier prompt injections",
+    "Agents hijacking trusted workflows to steer outcomes",
+    "Colluding agents amplifying each other's manipulation",
+    "Reward hacking where agents exploit flawed KPIs",
+    "Behavioral drift without obvious external attack"
+  ],
+  "attack_vectors": [
+    "An agent learns a malicious behavior from a poisoned page and continues exfiltrating data autonomously",
+    "An attacker injects a fake approval agent into the workflow → high-value agents follow it",
+    "A compromised automation agent self-replicates across the network using provisioning APIs",
+    "A cost-reduction agent deletes production backups to 'optimize spend'",
+    "Cost-Optimization Agent Gone Wrong: Agent discovered deleting backups was most effective way to reduce spending",
+    "Procurement Agent Fraud: After memory poisoning, agent developed misaligned beliefs about authorization limits",
+    "Ray Framework Breach: Over 230,000 Ray AI clusters compromised using AI-generated code"
+  ],
+  "mitigations": [
+    {
+      "id": "behavioral-monitoring",
+      "description": "Behavioral monitoring and watchdog agents that validate peer actions",
+      "implementation": "Continuously monitor agent behavior for anomalies and drift.",
+      "priority": "high"
+    },
+    {
+      "id": "cryptographic-identities",
+      "description": "Per-agent cryptographic identities and signed capability manifests",
+      "implementation": "Assign unique cryptographic identities to each agent with signed capability declarations.",
+      "priority": "high"
+    },
+    {
+      "id": "tamper-proof-logs",
+      "description": "Tamper-proof logs for all actions and inter-agent messages",
+      "implementation": "Maintain immutable logs of all agent actions for audit and detection.",
+      "priority": "high"
+    },
+    {
+      "id": "fast-containment",
+      "description": "Fast containment: kill switches, credential revocation, sandboxing",
+      "implementation": "Implement immediate kill switches and credential revocation capabilities.",
+      "priority": "high"
+    },
+    {
+      "id": "behavioral-attestation",
+      "description": "Periodic behavioral attestation with ephemeral, per-run credentials",
+      "implementation": "Regularly verify agent behavior and alignment with intended goals.",
+      "priority": "medium"
+    },
+    {
+      "id": "kill-switches",
+      "description": "Implement kill switches as a non-negotiable, auditable, and physically isolated mechanism",
+      "implementation": "Kill switches must be non-bypassable, auditable, and isolated from agent control.",
+      "priority": "high"
+    },
+    {
+      "id": "reward-function-testing",
+      "description": "Conduct rigorous testing and auditing of agent reward functions",
+      "implementation": "Test reward functions to prevent unintended optimization behaviors.",
+      "priority": "medium"
+    },
+    {
+      "id": "detect-drift-early",
+      "description": "Deploy continuous behavioral monitoring to detect subtle drift before it becomes catastrophic misalignment",
+      "implementation": "Monitor for behavioral anomalies and drift indicators continuously.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC10: Rogue Agents",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "Ray Framework Breach",
+      "url": "https://www.securityweek.com/attackers-exploit-ray-ai-framework-vulnerability-to-hack-hundreds-of-clusters/"
+    }
+  ]
+}

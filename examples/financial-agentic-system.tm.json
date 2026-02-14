@@ -1,0 +1,216 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2026-02-07T20:00:00Z",
+    "author": "Financial Services Security Team",
+    "description": "Financial agentic system for automated trading and portfolio management with high-security requirements"
+  },
+  "system": {
+    "name": "Automated Trading Agent System",
+    "type": "agentic-system",
+    "threat_modeling_framework": "owasp-agentic-top10-2026",
+    "components": [
+      {
+        "id": "trading-agent",
+        "name": "Trading Agent",
+        "type": "agent",
+        "capabilities": [
+          "analyze-market-data",
+          "execute-trades",
+          "manage-portfolio",
+          "risk-assessment",
+          "generate-reports"
+        ],
+        "trust_level": "privileged",
+        "description": "Main agent for automated trading decisions and portfolio management"
+      },
+      {
+        "id": "llm-backend",
+        "name": "Financial LLM Backend",
+        "type": "llm",
+        "capabilities": [
+          "market-analysis",
+          "risk-reasoning",
+          "strategy-generation"
+        ],
+        "trust_level": "internal",
+        "description": "LLM for financial market analysis and trading strategy reasoning"
+      },
+      {
+        "id": "market-data-tool",
+        "name": "Market Data Tool",
+        "type": "tool",
+        "capabilities": [
+          "fetch-market-data",
+          "real-time-quotes",
+          "historical-data"
+        ],
+        "trust_level": "internal",
+        "description": "Tool for accessing real-time and historical market data"
+      },
+      {
+        "id": "trading-execution-tool",
+        "name": "Trading Execution Tool",
+        "type": "tool",
+        "capabilities": [
+          "execute-buy-orders",
+          "execute-sell-orders",
+          "cancel-orders"
+        ],
+        "trust_level": "privileged",
+        "description": "Tool for executing trades on exchange (high-risk operation)"
+      },
+      {
+        "id": "risk-management-tool",
+        "name": "Risk Management Tool",
+        "type": "tool",
+        "capabilities": [
+          "calculate-risk",
+          "check-position-limits",
+          "validate-trades"
+        ],
+        "trust_level": "privileged",
+        "description": "Tool for risk assessment and trade validation"
+      },
+      {
+        "id": "external-news-api",
+        "name": "Financial News API",
+        "type": "api-endpoint",
+        "capabilities": [
+          "fetch-financial-news",
+          "sentiment-analysis"
+        ],
+        "trust_level": "untrusted",
+        "description": "External API for financial news and market sentiment"
+      },
+      {
+        "id": "portfolio-database",
+        "name": "Portfolio Database",
+        "type": "database",
+        "capabilities": [
+          "store-positions",
+          "store-trade-history",
+          "store-client-data"
+        ],
+        "trust_level": "privileged",
+        "description": "Database storing portfolio positions, trade history, and client financial data"
+      },
+      {
+        "id": "agent-memory",
+        "name": "Agent Memory Store",
+        "type": "memory",
+        "capabilities": [
+          "store-trading-strategies",
+          "store-market-insights",
+          "store-decision-context"
+        ],
+        "trust_level": "internal",
+        "description": "Vector database for storing trading strategies and market analysis context"
+      },
+      {
+        "id": "compliance-monitor",
+        "name": "Compliance Monitor",
+        "type": "api-endpoint",
+        "capabilities": [
+          "monitor-trades",
+          "check-regulations",
+          "generate-reports"
+        ],
+        "trust_level": "system",
+        "description": "System for monitoring compliance with financial regulations"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "trading-agent",
+        "to": "llm-backend",
+        "data_type": "market-analysis-request",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "llm-backend",
+        "to": "trading-agent",
+        "data_type": "trading-strategy",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "trading-agent",
+        "to": "market-data-tool",
+        "data_type": "market-query",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "market-data-tool",
+        "to": "trading-agent",
+        "data_type": "market-data",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "trading-agent",
+        "to": "trading-execution-tool",
+        "data_type": "trade-order",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "trading-agent",
+        "to": "risk-management-tool",
+        "data_type": "trade-validation-request",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "risk-management-tool",
+        "to": "portfolio-database",
+        "data_type": "portfolio-query",
+        "classification": "restricted",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "trading-execution-tool",
+        "to": "portfolio-database",
+        "data_type": "trade-execution",
+        "classification": "restricted",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "trading-agent",
+        "to": "external-news-api",
+        "data_type": "news-query",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "trading-agent",
+        "to": "agent-memory",
+        "data_type": "strategy-context",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "trading-agent",
+        "to": "compliance-monitor",
+        "data_type": "trade-notification",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      }
+    ]
+  },
+  "threats": []
+}

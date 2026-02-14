@@ -22,6 +22,7 @@ from ..core.models import (
 )
 from ..plugins import load_plugins
 from ..plugins.registry import PluginRegistry
+from ..utils.logging import setup_logging
 from .display import display_threat_model
 from .reporting import generate_markdown_report, generate_mermaid_diagram
 
@@ -34,6 +35,24 @@ app = typer.Typer(
     add_completion=False,
 )
 console = Console()
+
+
+@app.callback()
+def main(
+    debug: bool = typer.Option(
+        False, "--debug", "-d", help="Enable debug mode (verbose logging)"
+    ),
+):
+    """
+    AI Threat Model - Open-source threat modeling tool for AI-native systems.
+    """
+    # Setup logging
+    setup_logging(debug=debug)
+    """
+    AI Threat Model - Open-source threat modeling tool for AI-native systems.
+    """
+    # Setup logging
+    setup_logging(debug=debug)
 
 
 @app.command()
@@ -82,6 +101,27 @@ def init(
 @app.command()
 def analyze(
     file_path: Path = typer.Argument(..., help="Path to threat model file"),
+    interactive: bool = typer.Option(
+        False, "--interactive", "-i", help="Interactive mode for PLOT4AI elicitation questions"
+    ),
+    lifecycle_phase: Optional[str] = typer.Option(
+        None,
+        "--lifecycle-phase",
+        "-l",
+        help="PLOT4AI lifecycle phase filter (Design, Input, Model, Output, Deploy, Monitor)",
+    ),
+    category: Optional[str] = typer.Option(
+        None,
+        "--category",
+        "-c",
+        help="PLOT4AI category filter (e.g., 'Data & Data Governance', 'Privacy & Data Protection')",
+    ),
+    aitype: Optional[str] = typer.Option(
+        None,
+        "--aitype",
+        "-a",
+        help="AI type filter (Traditional, Generative)",
+    ),
 ) -> None:
     """Analyze threat model and detect threats."""
     if not file_path.exists():
@@ -103,9 +143,46 @@ def analyze(
         console.print("Threats will not be automatically detected.")
         raise typer.Exit(0)
 
-    # Detect threats
-    console.print(f"[cyan]Analyzing system: {threat_model.system.name}[/cyan]")
-    threats = plugin.detect_threats(threat_model.system)
+    # PLOT4AI specific handling
+    answers = None
+    if threat_model.system.threat_modeling_framework == ThreatModelingFramework.PLOT4AI:
+        from ..plugins.ai.plot4ai_plugin import Plot4AIPlugin
+
+        if isinstance(plugin, Plot4AIPlugin):
+            if interactive:
+                # Interactive elicitation question workflow
+                console.print("[cyan]PLOT4AI Interactive Mode[/cyan]")
+                console.print("Answer questions with Yes/No/Maybe (or 'skip' to skip)\n")
+
+                questions = plugin.get_elicitation_questions(
+                    lifecycle_phase=lifecycle_phase, category=category, aitype=aitype
+                )
+                answers = {}
+
+                for q in questions:
+                    console.print(f"[bold]Question:[/bold] {q['question']}")
+                    console.print(f"[dim]Label: {q['label']}[/dim]")
+                    console.print(f"[dim]Threat if: {q['threatif']}[/dim]\n")
+
+                    answer = typer.prompt("Your answer (Yes/No/Maybe/Skip)", default="Skip").strip()
+                    if answer.lower() != "skip":
+                        answers[q["id"]] = answer
+
+                console.print(f"\n[green]Answered {len(answers)} questions[/green]\n")
+
+            # Use PLOT4AI specific detect_threats with filters
+            threats = plugin.detect_threats(
+                threat_model.system,
+                lifecycle_phase=lifecycle_phase,
+                category=category,
+                aitype=aitype,
+                answers=answers,
+            )
+        else:
+            threats = plugin.detect_threats(threat_model.system)
+    else:
+        # Standard threat detection
+        threats = plugin.detect_threats(threat_model.system)
 
     # Update threat model
     threat_model.threats = threats
@@ -117,20 +194,32 @@ def analyze(
     console.print(f"  Data flows analyzed: {len(threat_model.system.data_flows)}")
     console.print(f"  Threats detected: {len(threats)}")
 
+    if lifecycle_phase:
+        console.print(f"  Lifecycle phase filter: {lifecycle_phase}")
+    if category:
+        console.print(f"  Category filter: {category}")
+    if aitype:
+        console.print(f"  AI type filter: {aitype}")
+
     if threats:
         table = Table(title="Detected Threats")
         table.add_column("ID", style="cyan")
         table.add_column("Category", style="magenta")
         table.add_column("Title", style="green")
         table.add_column("Severity", style="yellow")
+        if lifecycle_phase:
+            table.add_column("Phase", style="blue")
 
         for threat in threats[:10]:  # Show first 10
-            table.add_row(
-                threat.id[:8],
+            row_data = [
+                threat.id[:12] if len(threat.id) > 12 else threat.id,
                 threat.category,
-                threat.title,
+                threat.title[:40] + "..." if len(threat.title) > 40 else threat.title,
                 threat.severity.value if threat.severity else "N/A",
-            )
+            ]
+            if lifecycle_phase and threat.lifecycle_phase:
+                row_data.append(threat.lifecycle_phase)
+            table.add_row(*row_data)
 
         console.print()
         console.print(table)

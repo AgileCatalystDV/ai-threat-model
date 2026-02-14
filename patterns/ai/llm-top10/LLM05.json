@@ -1,0 +1,55 @@
+{
+  "id": "LLM05",
+  "category": "LLM05",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Supply Chain Vulnerabilities",
+  "description": "Supply chain vulnerabilities occur when third-party models, datasets, plugins, or dependencies contain security flaws. This includes compromised pre-trained models, malicious plugins, vulnerable dependencies, or untrusted third-party services integrated into the LLM system.",
+  "detection_patterns": [
+    "Third-party models used without verification",
+    "External plugins or tools integrated",
+    "No security review of dependencies",
+    "Pre-trained models from untrusted sources",
+    "No dependency scanning",
+    "Third-party APIs integrated without security assessment"
+  ],
+  "attack_vectors": [
+    "Malicious third-party models",
+    "Compromised dependencies",
+    "Backdoored pre-trained models",
+    "Vulnerable plugin execution",
+    "Supply chain attacks on model repositories",
+    "Compromised model registries"
+  ],
+  "mitigations": [
+    {
+      "id": "supply-chain-review",
+      "description": "Review and verify all dependencies",
+      "implementation": "Implement dependency scanning, verify model checksums, review plugin code, and maintain a software bill of materials (SBOM).",
+      "priority": "high"
+    },
+    {
+      "id": "model-verification",
+      "description": "Verify model integrity and provenance",
+      "implementation": "Use signed models, verify checksums, maintain model registry with provenance tracking, and use trusted model sources.",
+      "priority": "high"
+    },
+    {
+      "id": "plugin-security",
+      "description": "Secure plugin architecture",
+      "implementation": "Sandbox plugins, implement least privilege, review plugin code, and use allowlists for approved plugins.",
+      "priority": "high"
+    },
+    {
+      "id": "dependency-scanning",
+      "description": "Regular dependency vulnerability scanning",
+      "implementation": "Use automated tools to scan dependencies for known vulnerabilities and keep dependencies updated.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM05: Supply Chain Vulnerabilities",
+      "url": "https://genai.owasp.org/llm-top-10/llm05-supply-chain-vulnerabilities/"
+    }
+  ]
+}

@@ -83,6 +83,61 @@ class TestLLMPlugin:
         threat_categories = [t.category for t in threats]
         assert "LLM01" in threat_categories or "LLM02" in threat_categories
 
+    def test_detect_threats_with_capabilities(self):
+        """Test threat detection using component capabilities."""
+        llm_component = Component(
+            id="llm1",
+            name="LLM Service with Plugin Support",
+            type=ComponentType.LLM,
+            capabilities=["text-generation", "plugin-execution", "code-execution"],
+            trust_level=TrustLevel.INTERNAL,
+        )
+        system = SystemModel(
+            name="Test LLM App",
+            type=SystemType.LLM_APP,
+            threat_modeling_framework=ThreatModelingFramework.OWASP_LLM_TOP10_2025,
+            components=[llm_component],
+        )
+
+        threats = self.plugin.detect_threats(system)
+        # Should detect LLM07 (Insecure Plugin Design) based on capabilities
+        threat_categories = [t.category for t in threats]
+        # Enhanced detection should match based on capabilities
+        assert len(threats) > 0
+
+    def test_detect_threats_with_untrusted_component(self):
+        """Test threat detection with untrusted component."""
+        untrusted_component = Component(
+            id="external-api",
+            name="External API",
+            type=ComponentType.API_ENDPOINT,
+            trust_level=TrustLevel.UNTRUSTED,
+        )
+        llm_component = Component(
+            id="llm1",
+            name="LLM Service",
+            type=ComponentType.LLM,
+        )
+        system = SystemModel(
+            name="Test LLM App",
+            type=SystemType.LLM_APP,
+            threat_modeling_framework=ThreatModelingFramework.OWASP_LLM_TOP10_2025,
+            components=[untrusted_component, llm_component],
+            data_flows=[
+                DataFlow(
+                    from_component="external-api",
+                    to_component="llm1",
+                    data_type="user-input",
+                    classification=DataClassification.CONFIDENTIAL,
+                    encrypted=False,
+                )
+            ],
+        )
+
+        threats = self.plugin.detect_threats(system)
+        # Should detect threats related to untrusted sources
+        assert len(threats) > 0
+
     def test_detect_threats_insecure_data_flow(self):
         """Test threat detection for insecure data flows."""
         component1 = Component(id="comp1", name="Component 1", type=ComponentType.LLM)

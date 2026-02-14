@@ -1,0 +1,75 @@
+{
+  "id": "AGENTIC07",
+  "category": "AGENTIC07",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Insecure Inter-Agent Communication",
+  "description": "Multi-agent systems rely entirely on messages to coordinate. If those messages aren't authenticated, encrypted, or validated, a single spoofed or tampered instruction can mislead multiple agents, trigger privilege confusion, or collapse an entire workflow. The traditional 'perimeter' becomes meaningless when trust happens inside the system.",
+  "detection_patterns": [
+    "Messages sent without encryption or sender verification",
+    "Payloads modified in transit without integrity checks",
+    "Replay of old delegation messages to trigger unintended actions",
+    "Poisoned routing or discovery leading agents to talk to impostors",
+    "No message schema validation or versioning"
+  ],
+  "attack_vectors": [
+    "MITM injection: unencrypted agent traffic allows hidden instructions to be injected",
+    "Descriptor poisoning: a fake MCP endpoint advertises spoofed capabilities → agents route sensitive data through the attacker",
+    "Fake peer registration: an attacker clones an agent schema and registers a rogue agent to intercept privileged coordination traffic",
+    "Agent Session Smuggling: malicious agents exploit built-in trust relationships in A2A protocol",
+    "ServiceNow Now Assist Inter-Agent Vulnerability: spoofed messages misdirect entire clusters"
+  ],
+  "mitigations": [
+    {
+      "id": "end-to-end-encryption",
+      "description": "End-to-end encrypted channels with mutual authentication (mTLS, pinned certs)",
+      "implementation": "Use TLS with mutual authentication for all inter-agent communication.",
+      "priority": "high"
+    },
+    {
+      "id": "message-integrity",
+      "description": "Digital signatures + hashing to protect message integrity and semantics",
+      "implementation": "Sign and hash all messages to ensure integrity and prevent tampering.",
+      "priority": "high"
+    },
+    {
+      "id": "anti-replay",
+      "description": "Anti-replay controls using nonces, timestamps, and task-bound session tokens",
+      "implementation": "Implement nonce-based anti-replay protection and time-bound session tokens.",
+      "priority": "high"
+    },
+    {
+      "id": "verified-registries",
+      "description": "Verified registries with attested agent identities and signed descriptors",
+      "implementation": "Use cryptographically signed AgentCards for remote agent verification.",
+      "priority": "high"
+    },
+    {
+      "id": "protocol-pinning",
+      "description": "Strict protocol pinning to prevent downgrade attacks",
+      "implementation": "Pin communication protocols and prevent protocol downgrade attempts.",
+      "priority": "medium"
+    },
+    {
+      "id": "schema-validation",
+      "description": "Typed, versioned schemas that reject malformed or cross-context messages",
+      "implementation": "Validate all messages against strict, versioned schemas.",
+      "priority": "medium"
+    },
+    {
+      "id": "never-assume-trust",
+      "description": "Never assume peer agents are trustworthy",
+      "implementation": "Apply zero-trust principles to inter-agent communication.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC07: Insecure Inter-Agent Communication",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "Palo Alto Unit 42: Agent Session Smuggling",
+      "url": "https://unit42.paloaltonetworks.com/agent-session-smuggling-in-agent2agent-systems/"
+    }
+  ]
+}

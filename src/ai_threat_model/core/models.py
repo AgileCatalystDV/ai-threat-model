@@ -39,6 +39,7 @@ class ThreatModelingFramework(str, Enum):
     DREAD = "dread"
     PASTA = "pasta"
     TRIKE = "trike"
+    PLOT4AI = "plot4ai"
     CUSTOM = "custom"
 
 
@@ -225,6 +226,10 @@ class Threat(BaseModel):
     mitigations: List[Mitigation] = Field(default_factory=list, description="Mitigation strategies")
     risk_score: Optional[RiskScore] = Field(None, description="Risk score")
     references: List[dict] = Field(default_factory=list, description="References")
+    # PLOT4AI specific fields
+    lifecycle_phase: Optional[str] = Field(None, description="PLOT4AI lifecycle phase (Design, Input, Model, Output, Deploy, Monitor)")
+    elicitation_question: Optional[str] = Field(None, description="PLOT4AI elicitation question")
+    plot4ai_card_id: Optional[str] = Field(None, description="PLOT4AI card ID reference")
 
 
 class VisualizationNode(BaseModel):

@@ -1,0 +1,44 @@
+version: '3.8'
+
+# Development override voor docker-compose.yml
+# Gebruik: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  backend:
+    volumes:
+      # Mount source code voor hot-reload
+      - ./src:/app/src
+      - ./patterns:/app/patterns
+      - ./schemas:/app/schemas
+      - ./examples:/app/examples
+    command: uvicorn ai_threat_model.api.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=DEBUG
+      - DEBUG=true
+    # Disable healthcheck in dev mode (reload can cause false positives)
+    healthcheck:
+      disable: true
+
+  frontend:
+    # Voor development, gebruik lokale npm dev server
+    # Dit override wordt alleen gebruikt als je frontend ook in Docker wilt draaien
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"  # Vite default port
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js
+      - ./frontend/postcss.config.js:/app/postcss.config.js
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    command: npm run dev -- --host 0.0.0.0
+    # Disable healthcheck in dev mode
+    healthcheck:
+      disable: true

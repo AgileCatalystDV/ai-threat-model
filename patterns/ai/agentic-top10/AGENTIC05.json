@@ -1,0 +1,78 @@
+{
+  "id": "AGENTIC05",
+  "category": "AGENTIC05",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Unexpected Code Execution (RCE)",
+  "description": "Agents often call code execution tools—shells, runtimes, notebooks, scripts—to complete tasks. When an attacker manipulates those inputs, the agent can unintentionally execute arbitrary or malicious code.",
+  "detection_patterns": [
+    "Agents forwarding untrusted LLM-generated output directly into shell or code tools",
+    "Over-scoped execution tools with full filesystem or network access",
+    "Hidden instructions embedded in PDFs, websites, or retrieved documents",
+    "Unsafe browsing agents downloading or running unverified binaries",
+    "Models hallucinating dangerous commands that the agent executes blindly"
+  ],
+  "attack_vectors": [
+    "A PDF instructing an agent to run cleanup.sh and send logs to an attacker",
+    "Browsing agents downloading malware-laced files and executing them",
+    "Agents running hallucinated shell commands (e.g., rm -rf / or credential dumps)",
+    "Tool-chaining attacks where PowerShell + curl are used to exfiltrate data",
+    "CurXecute (CVE-2025-54135): Cursor MCP auto-start exploited via poisoned prompts",
+    "MCPoison (CVE-2025-54136): Silent MCP configuration swap attacks"
+  ],
+  "mitigations": [
+    {
+      "id": "sandbox-execution",
+      "description": "Require sandboxed execution with strict filesystem and egress controls",
+      "implementation": "Isolate code execution in sandboxes with restricted filesystem and network access.",
+      "priority": "high"
+    },
+    {
+      "id": "validate-outputs",
+      "description": "Treat all model outputs as untrusted code until validated",
+      "implementation": "Never execute LLM-generated code directly. Always validate and sanitize first.",
+      "priority": "high"
+    },
+    {
+      "id": "dry-run-preview",
+      "description": "Enforce dry-run previews for any destructive or code-producing action",
+      "implementation": "Require preview mode for code execution, showing what would be executed before running.",
+      "priority": "high"
+    },
+    {
+      "id": "least-privilege-execution",
+      "description": "Apply least privilege to execution tools—no network, no root, no write unless needed",
+      "implementation": "Restrict execution tools to minimum necessary permissions.",
+      "priority": "high"
+    },
+    {
+      "id": "human-approval",
+      "description": "Require explicit human approval for high-impact commands",
+      "implementation": "Implement human-in-the-loop approval for destructive or high-risk operations.",
+      "priority": "high"
+    },
+    {
+      "id": "disable-auto-run",
+      "description": "Never auto-approve tool calls based on repository content. Disable auto-run mode",
+      "implementation": "Disable automatic execution modes. Always require explicit approval.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC05: Unexpected Code Execution",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "CurXecute CVE-2025-54135",
+      "url": "https://www.aim.security/post/when-public-prompts-turn-into-local-shells-rce-in-cursor-via-mcp-auto-start"
+    },
+    {
+      "title": "MCPoison CVE-2025-54136",
+      "url": "https://research.checkpoint.com/2025/cursor-vulnerability-mcpoison/"
+    },
+    {
+      "title": "IDEsaster Research - 30+ CVEs in AI IDEs",
+      "url": "https://thehackernews.com/2025/12/researchers-uncover-30-flaws-in-ai.html"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "AGENTIC03",
+  "category": "AGENTIC03",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Identity and Privilege Abuse",
+  "description": "Most agentic systems lack real, governable identities. Instead, agents inherit context, credentials, or privileges in ways traditional IAM systems were never designed for. This creates an attribution gap that attackers can exploit to escalate rights, impersonate other agents, and bypass authorization controls.",
+  "detection_patterns": [
+    "Delegation chains that pass full privilege sets instead of scoped rights",
+    "Cached credentials reused across users or sessions",
+    "Agents trusting internal requests without verifying original intent",
+    "TOCTOU errors where authorization checks happen only at the start of a long workflow",
+    "Fake agents impersonating trusted internal services",
+    "Users implicitly borrowing an agent's identity through tool access"
+  ],
+  "attack_vectors": [
+    "Worker agents inheriting full database rights from manager agents",
+    "Attackers prompting agents to reuse cached SSH keys",
+    "Finance agents approving transfers based on forwarded—but forged—internal instructions",
+    "Device-code phishing across multiple agents",
+    "Fake 'Admin Helper' agents gaining trust by name alone"
+  ],
+  "mitigations": [
+    {
+      "id": "task-scoped-permissions",
+      "description": "Use task-scoped, short-lived permissions",
+      "implementation": "Bind permissions tightly to who, what, why, and for how long. Use ephemeral credentials.",
+      "priority": "high"
+    },
+    {
+      "id": "session-isolation",
+      "description": "Implement session isolation with strict memory wiping",
+      "implementation": "Isolate agent sessions and wipe memory between tasks.",
+      "priority": "high"
+    },
+    {
+      "id": "per-step-authorization",
+      "description": "Authorization checks per step, not per workflow",
+      "implementation": "Validate authorization at each step of multi-step workflows, not just at the start.",
+      "priority": "high"
+    },
+    {
+      "id": "human-oversight",
+      "description": "Human oversight for escalated or irreversible actions",
+      "implementation": "Require human approval for high-privilege or destructive operations.",
+      "priority": "high"
+    },
+    {
+      "id": "nhi-iam-platform",
+      "description": "Adopt proper NHI/IAM platforms for agent identity",
+      "implementation": "Use Non-Human Identity (NHI) management platforms designed for agent identities.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC03: Identity and Privilege Abuse",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "NHI Management Group - Complete Guide",
+      "url": "https://nhimg.org/complete-guide-to-the-2026-owasp-top-10-risks-for-agentic-applications"
+    }
+  ]
+}

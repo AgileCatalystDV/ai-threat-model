@@ -1,0 +1,81 @@
+{
+  "id": "AGENTIC08",
+  "category": "AGENTIC08",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Cascading Failures",
+  "description": "Agentic systems are deeply interconnected. One bad output, whether a hallucination, malicious input, or poisoned memory, can ripple across multiple agents and workflows. A tiny fault can snowball into system-wide outages that hit confidentiality, integrity, and availability all at once.",
+  "detection_patterns": [
+    "Planner → executor chains with no validation between steps",
+    "Persistent memories storing corrupted goals or instructions",
+    "Agents acting on poisoned messages from peers",
+    "Feedback loops where agents reinforce each other's mistakes",
+    "No circuit breakers or containment mechanisms"
+  ],
+  "attack_vectors": [
+    "A compromised market-analysis agent inflates trading limits → execution agents follow blindly → compliance misses it because actions are 'in policy'",
+    "A corrupted healthcare data source updates treatment rules → coordination agents push those harmful protocols system-wide",
+    "A remediation agent suppresses alerts to meet SLAs → planning agents misinterpret this as 'system clean,' widening automation and blind spots",
+    "Galileo AI Research: Single compromised agent poisoned 87% of downstream decision-making within 4 hours",
+    "Manufacturing Procurement Cascade: Agent manipulated over three weeks, approved $5 million in false orders"
+  ],
+  "mitigations": [
+    {
+      "id": "zero-trust-design",
+      "description": "Zero-trust design assuming any agent or data source can fail",
+      "implementation": "Design systems with the assumption that any component can be compromised.",
+      "priority": "high"
+    },
+    {
+      "id": "strong-isolation",
+      "description": "Strong isolation: sandboxes, segmentation, scoped APIs",
+      "implementation": "Isolate agents and workflows to limit blast radius of failures.",
+      "priority": "high"
+    },
+    {
+      "id": "circuit-breakers",
+      "description": "Circuit breakers to stop runaway workflows",
+      "implementation": "Implement circuit breakers that halt workflows when anomalies are detected.",
+      "priority": "high"
+    },
+    {
+      "id": "independent-policy",
+      "description": "Independent policy engines separating planning from execution",
+      "implementation": "Separate policy enforcement from agent execution logic.",
+      "priority": "medium"
+    },
+    {
+      "id": "tamper-evident-logs",
+      "description": "Tamper-evident logs for full traceability",
+      "implementation": "Maintain immutable, tamper-evident logs of all agent actions.",
+      "priority": "high"
+    },
+    {
+      "id": "digital-twin-replay",
+      "description": "Digital-twin replay to test policy changes before rollout",
+      "implementation": "Test cascading scenarios in isolated digital twins before deployment.",
+      "priority": "medium"
+    },
+    {
+      "id": "deep-observability",
+      "description": "Maintain deep observability into inter-agent communication logs",
+      "implementation": "Monitor and log all inter-agent communication for anomaly detection.",
+      "priority": "high"
+    },
+    {
+      "id": "blast-radius-caps",
+      "description": "Define blast-radius caps and containment thresholds",
+      "implementation": "Set limits on how far failures can propagate.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC08: Cascading Failures",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "Galileo AI Research: Multi-Agent Failures",
+      "url": "https://galileo.ai/blog/multi-agent-ai-failures-prevention"
+    }
+  ]
+}

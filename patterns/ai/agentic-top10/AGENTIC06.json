@@ -1,0 +1,74 @@
+{
+  "id": "AGENTIC06",
+  "category": "AGENTIC06",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Memory and Context Poisoning",
+  "description": "Agents use memory to store context, preferences, tasks, and past actions. If attackers can insert malicious content into that memory, the agent becomes permanently biased or compromised. A single successful injection can poison an agent's memory permanently. Every future session inherits the compromise.",
+  "detection_patterns": [
+    "Agents writing unvalidated user content directly into long-term memory",
+    "Multi-step workflows that implicitly store intermediate data",
+    "Memory used as a 'shadow prompt' that shapes future behavior",
+    "Cross-user contamination where one user's inputs affect another's results",
+    "Poisoned RAG or external data sources influencing stored summaries"
+  ],
+  "attack_vectors": [
+    "Attackers embedding hidden instructions in files that get saved to agent memory",
+    "A malicious user alters an agent's preferences so it approves risky actions",
+    "Poisoned documents rewriting an agent's stored 'rules' or 'goals'",
+    "Long-term memory drifting until the agent becomes misaligned without attackers present",
+    "Google Gemini Memory Attack: Delayed tool invocation via hidden prompts",
+    "Gemini Calendar Invite Poisoning: Persistent instructions in Saved Info"
+  ],
+  "mitigations": [
+    {
+      "id": "validate-memory-writes",
+      "description": "Validate and sanitize any content before writing to memory",
+      "implementation": "Treat memory writes as security-sensitive operations. Validate all inputs.",
+      "priority": "high"
+    },
+    {
+      "id": "structured-memory",
+      "description": "Never store raw user input; store structured, vetted summaries only",
+      "implementation": "Store only validated, structured data in agent memory, not raw user input.",
+      "priority": "high"
+    },
+    {
+      "id": "memory-isolation",
+      "description": "Use memory isolation per user, per session, and per task",
+      "implementation": "Isolate agent memory by user, session, and task context.",
+      "priority": "high"
+    },
+    {
+      "id": "provenance-tracking",
+      "description": "Log all memory mutations and require approval for goal-altering changes",
+      "implementation": "Track provenance (where did this memory come from?) and log all changes.",
+      "priority": "medium"
+    },
+    {
+      "id": "periodic-purge",
+      "description": "Periodically purge or re-baseline memory to remove drift or contamination",
+      "implementation": "Implement memory expiration and periodic re-baselining for sensitive contexts.",
+      "priority": "medium"
+    },
+    {
+      "id": "memory-audit",
+      "description": "Regularly audit agent memory for anomalies",
+      "implementation": "Monitor and audit agent memory for unexpected changes or contamination.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC06: Memory and Context Poisoning",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "Google Gemini Memory Attack",
+      "url": "https://embracethered.com/blog/posts/2025/gemini-memory-persistence-prompt-injection/"
+    },
+    {
+      "title": "Lakera AI Memory Injection Research",
+      "url": "https://www.lakera.ai/blog/agentic-ai-threats-p1"
+    }
+  ]
+}

@@ -1,0 +1,202 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2026-02-07T20:00:00Z",
+    "author": "Healthcare Security Team",
+    "description": "Healthcare agentic system for patient data analysis with privacy and compliance requirements (HIPAA, GDPR)"
+  },
+  "system": {
+    "name": "Healthcare Patient Analysis Agent",
+    "type": "agentic-system",
+    "threat_modeling_framework": "owasp-agentic-top10-2026",
+    "components": [
+      {
+        "id": "patient-analysis-agent",
+        "name": "Patient Analysis Agent",
+        "type": "agent",
+        "capabilities": [
+          "analyze-patient-records",
+          "generate-reports",
+          "identify-anomalies",
+          "recommend-treatments",
+          "access-ehr-system"
+        ],
+        "trust_level": "privileged",
+        "description": "Main agent for analyzing patient data and generating medical insights"
+      },
+      {
+        "id": "llm-backend",
+        "name": "Medical LLM Backend",
+        "type": "llm",
+        "capabilities": [
+          "medical-reasoning",
+          "clinical-note-generation",
+          "diagnosis-assistance"
+        ],
+        "trust_level": "internal",
+        "description": "Specialized LLM for medical text analysis and reasoning"
+      },
+      {
+        "id": "ehr-api-tool",
+        "name": "EHR API Tool",
+        "type": "tool",
+        "capabilities": [
+          "read-patient-records",
+          "write-clinical-notes",
+          "query-medical-history"
+        ],
+        "trust_level": "privileged",
+        "description": "Tool for accessing Electronic Health Records system"
+      },
+      {
+        "id": "lab-results-tool",
+        "name": "Lab Results Tool",
+        "type": "tool",
+        "capabilities": [
+          "fetch-lab-results",
+          "parse-lab-data"
+        ],
+        "trust_level": "internal",
+        "description": "Tool for retrieving and parsing laboratory test results"
+      },
+      {
+        "id": "external-medical-api",
+        "name": "External Medical Knowledge API",
+        "type": "api-endpoint",
+        "capabilities": [
+          "medical-literature-search",
+          "drug-interaction-check"
+        ],
+        "trust_level": "untrusted",
+        "description": "External API for medical knowledge and drug interaction checking"
+      },
+      {
+        "id": "patient-database",
+        "name": "Patient Database",
+        "type": "database",
+        "capabilities": [
+          "store-patient-data",
+          "store-medical-records"
+        ],
+        "trust_level": "privileged",
+        "description": "PostgreSQL database storing patient records and medical history"
+      },
+      {
+        "id": "agent-memory",
+        "name": "Agent Memory Store",
+        "type": "memory",
+        "capabilities": [
+          "store-conversation-context",
+          "store-analysis-results",
+          "retrieve-patient-context"
+        ],
+        "trust_level": "internal",
+        "description": "Vector database storing agent conversation context and analysis results"
+      },
+      {
+        "id": "audit-logger",
+        "name": "Audit Logger",
+        "type": "api-endpoint",
+        "capabilities": [
+          "log-access",
+          "log-data-access",
+          "compliance-reporting"
+        ],
+        "trust_level": "system",
+        "description": "System for logging all patient data access for HIPAA compliance"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "patient-analysis-agent",
+        "to": "llm-backend",
+        "data_type": "patient-data-analysis-request",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "llm-backend",
+        "to": "patient-analysis-agent",
+        "data_type": "medical-analysis-response",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "patient-analysis-agent",
+        "to": "ehr-api-tool",
+        "data_type": "patient-record-query",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "ehr-api-tool",
+        "to": "patient-database",
+        "data_type": "patient-records",
+        "classification": "restricted",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "patient-analysis-agent",
+        "to": "lab-results-tool",
+        "data_type": "lab-request",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "patient-analysis-agent",
+        "to": "external-medical-api",
+        "data_type": "medical-query",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "external-medical-api",
+        "to": "patient-analysis-agent",
+        "data_type": "medical-knowledge-response",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "patient-analysis-agent",
+        "to": "agent-memory",
+        "data_type": "patient-context",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "agent-memory",
+        "to": "patient-analysis-agent",
+        "data_type": "stored-context",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "patient-analysis-agent",
+        "to": "audit-logger",
+        "data_type": "access-log",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "ehr-api-tool",
+        "to": "patient-database",
+        "data_type": "clinical-notes",
+        "classification": "restricted",
+        "protocol": "TCP",
+        "encrypted": false
+      }
+    ]
+  },
+  "threats": []
+}

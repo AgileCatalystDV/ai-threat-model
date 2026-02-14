@@ -1,0 +1,48 @@
+{
+  "id": "LLM03",
+  "category": "LLM03",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Training Data Poisoning",
+  "description": "Training data poisoning occurs when malicious data is introduced into the training dataset, causing the model to produce biased or malicious outputs. This can happen through injection of malicious examples, bias introduction through data manipulation, or compromised training data sources.",
+  "detection_patterns": [
+    "Training data from untrusted sources",
+    "No data validation or filtering",
+    "Public datasets used without verification",
+    "Training data contains user-generated content without sanitization",
+    "No data provenance tracking",
+    "Third-party data sources integrated without review"
+  ],
+  "attack_vectors": [
+    "Injection of malicious examples into training data",
+    "Bias introduction through data manipulation",
+    "Backdoor insertion via poisoned training samples",
+    "Compromised training data repositories",
+    "Adversarial examples in training set"
+  ],
+  "mitigations": [
+    {
+      "id": "data-validation",
+      "description": "Validate and filter training data",
+      "implementation": "Implement data validation pipelines with quality checks, anomaly detection, and content filtering. Verify data sources and maintain data provenance.",
+      "priority": "high"
+    },
+    {
+      "id": "data-source-verification",
+      "description": "Verify and trust training data sources",
+      "implementation": "Use trusted data sources, implement data source verification, and maintain data lineage tracking.",
+      "priority": "high"
+    },
+    {
+      "id": "bias-detection",
+      "description": "Detect and mitigate bias in training data",
+      "implementation": "Implement bias detection tools and regular audits of training data for fairness and representativeness.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM03: Training Data Poisoning",
+      "url": "https://genai.owasp.org/llm-top-10/llm03-training-data-poisoning/"
+    }
+  ]
+}

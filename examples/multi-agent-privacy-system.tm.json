@@ -1,0 +1,285 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2026-02-07T20:00:00Z",
+    "author": "Multi-Agent Privacy Team",
+    "description": "Multi-agent system for data governance and privacy compliance with inter-agent communication and data sharing"
+  },
+  "system": {
+    "name": "Data Governance Multi-Agent System",
+    "type": "multi-agent",
+    "threat_modeling_framework": "plot4ai",
+    "components": [
+      {
+        "id": "data-governance-orchestrator",
+        "name": "Data Governance Orchestrator",
+        "type": "agent",
+        "capabilities": [
+          "coordinate-agents",
+          "manage-data-policies",
+          "enforce-compliance",
+          "orchestrate-workflows"
+        ],
+        "trust_level": "privileged",
+        "description": "Main orchestrator agent for coordinating data governance activities"
+      },
+      {
+        "id": "privacy-agent",
+        "name": "Privacy Compliance Agent",
+        "type": "agent",
+        "capabilities": [
+          "gdpr-compliance-check",
+          "consent-validation",
+          "privacy-impact-assessment",
+          "data-subject-rights"
+        ],
+        "trust_level": "privileged",
+        "description": "Agent responsible for privacy compliance and GDPR enforcement"
+      },
+      {
+        "id": "data-quality-agent",
+        "name": "Data Quality Agent",
+        "type": "agent",
+        "capabilities": [
+          "data-validation",
+          "quality-assessment",
+          "anomaly-detection",
+          "data-lineage-tracking"
+        ],
+        "trust_level": "internal",
+        "description": "Agent for ensuring data quality and integrity"
+      },
+      {
+        "id": "access-control-agent",
+        "name": "Access Control Agent",
+        "type": "agent",
+        "capabilities": [
+          "authorization-check",
+          "permission-validation",
+          "access-auditing",
+          "role-management"
+        ],
+        "trust_level": "privileged",
+        "description": "Agent for managing access controls and permissions"
+      },
+      {
+        "id": "anonymization-agent",
+        "name": "Anonymization Agent",
+        "type": "agent",
+        "capabilities": [
+          "pii-detection",
+          "data-anonymization",
+          "pseudonymization",
+          "k-anonymity-enforcement"
+        ],
+        "trust_level": "internal",
+        "description": "Agent for anonymizing and pseudonymizing personal data"
+      },
+      {
+        "id": "llm-backend",
+        "name": "Governance LLM Backend",
+        "type": "llm",
+        "capabilities": [
+          "policy-reasoning",
+          "compliance-analysis",
+          "risk-assessment"
+        ],
+        "trust_level": "internal",
+        "description": "LLM backend for policy reasoning and compliance analysis"
+      },
+      {
+        "id": "policy-database",
+        "name": "Policy Database",
+        "type": "database",
+        "capabilities": [
+          "store-policies",
+          "store-compliance-rules",
+          "store-data-classifications"
+        ],
+        "trust_level": "privileged",
+        "description": "Database storing data governance policies and compliance rules"
+      },
+      {
+        "id": "data-catalog",
+        "name": "Data Catalog",
+        "type": "database",
+        "capabilities": [
+          "store-data-metadata",
+          "store-data-lineage",
+          "store-data-classifications"
+        ],
+        "trust_level": "internal",
+        "description": "Catalog of data assets with metadata and lineage information"
+      },
+      {
+        "id": "consent-registry",
+        "name": "Consent Registry",
+        "type": "database",
+        "capabilities": [
+          "store-consent-records",
+          "store-consent-history",
+          "track-consent-changes"
+        ],
+        "trust_level": "privileged",
+        "description": "Registry for managing user consent records and history"
+      },
+      {
+        "id": "agent-message-bus",
+        "name": "Agent Message Bus",
+        "type": "message-queue",
+        "capabilities": [
+          "route-messages",
+          "message-queuing",
+          "inter-agent-communication"
+        ],
+        "trust_level": "internal",
+        "description": "Message bus for secure inter-agent communication"
+      },
+      {
+        "id": "audit-service",
+        "name": "Audit Service",
+        "type": "api-endpoint",
+        "capabilities": [
+          "log-agent-actions",
+          "log-data-access",
+          "log-policy-decisions",
+          "compliance-reporting"
+        ],
+        "trust_level": "system",
+        "description": "Comprehensive audit service for all agent activities"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "data-governance-orchestrator",
+        "to": "privacy-agent",
+        "data_type": "privacy-check-request",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-agent",
+        "to": "data-governance-orchestrator",
+        "data_type": "compliance-status",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "data-governance-orchestrator",
+        "to": "data-quality-agent",
+        "data_type": "data-validation-request",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "data-quality-agent",
+        "to": "data-catalog",
+        "data_type": "data-metadata",
+        "classification": "internal",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "data-governance-orchestrator",
+        "to": "access-control-agent",
+        "data_type": "authorization-request",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "access-control-agent",
+        "to": "policy-database",
+        "data_type": "policy-query",
+        "classification": "internal",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "privacy-agent",
+        "to": "anonymization-agent",
+        "data_type": "anonymization-request",
+        "classification": "restricted",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "anonymization-agent",
+        "to": "privacy-agent",
+        "data_type": "anonymized-data",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-agent",
+        "to": "consent-registry",
+        "data_type": "consent-query",
+        "classification": "restricted",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "data-governance-orchestrator",
+        "to": "llm-backend",
+        "data_type": "policy-analysis-request",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "llm-backend",
+        "to": "data-governance-orchestrator",
+        "data_type": "policy-recommendation",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-agent",
+        "to": "agent-message-bus",
+        "data_type": "privacy-alert",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "agent-message-bus",
+        "to": "data-quality-agent",
+        "data_type": "privacy-alert",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "data-governance-orchestrator",
+        "to": "audit-service",
+        "data_type": "governance-action-log",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-agent",
+        "to": "audit-service",
+        "data_type": "privacy-action-log",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "access-control-agent",
+        "to": "audit-service",
+        "data_type": "access-log",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      }
+    ]
+  },
+  "threats": []
+}

@@ -1,0 +1,55 @@
+{
+  "id": "LLM09",
+  "category": "LLM09",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Overreliance",
+  "description": "Overreliance occurs when users or systems trust LLM outputs too much without verification. This can lead to misinformation propagation, incorrect decisions based on LLM output, or blind trust in potentially inaccurate or biased LLM responses.",
+  "detection_patterns": [
+    "LLM outputs used without verification",
+    "No fact-checking or validation",
+    "Critical decisions based solely on LLM output",
+    "No human review of LLM responses",
+    "Automated systems trust LLM output completely",
+    "No confidence scoring or uncertainty indicators"
+  ],
+  "attack_vectors": [
+    "Misinformation propagation",
+    "Decision manipulation",
+    "Hallucination exploitation",
+    "Bias amplification",
+    "False information injection",
+    "Social engineering via LLM outputs"
+  ],
+  "mitigations": [
+    {
+      "id": "output-verification",
+      "description": "Verify LLM outputs before use",
+      "implementation": "Implement fact-checking, cross-reference with trusted sources, and require human verification for critical outputs.",
+      "priority": "high"
+    },
+    {
+      "id": "confidence-scoring",
+      "description": "Provide confidence scores and uncertainty indicators",
+      "implementation": "Display confidence levels, uncertainty indicators, and source citations to help users assess LLM output reliability.",
+      "priority": "medium"
+    },
+    {
+      "id": "human-review",
+      "description": "Require human review for critical outputs",
+      "implementation": "Mandate human review for high-stakes decisions, medical advice, legal information, or financial recommendations.",
+      "priority": "high"
+    },
+    {
+      "id": "output-labeling",
+      "description": "Label LLM outputs clearly",
+      "implementation": "Clearly label AI-generated content, indicate limitations, and provide disclaimers about potential inaccuracies.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM09: Overreliance",
+      "url": "https://genai.owasp.org/llm-top-10/llm09-overreliance/"
+    }
+  ]
+}

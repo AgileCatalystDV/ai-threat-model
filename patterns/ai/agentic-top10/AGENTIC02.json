@@ -2,19 +2,26 @@
   "id": "AGENTIC02",
   "category": "AGENTIC02",
   "framework": "owasp-agentic-top10-2026",
-  "title": "Insecure Tool Use",
-  "description": "Insecure tool use occurs when agents use tools or APIs without proper security controls. This can lead to unauthorized actions or privilege escalation.",
+  "title": "Tool Misuse and Exploitation",
+  "description": "Agents gain real-world power through the tools they can access. When misled through prompt injection, misalignment, or unsafe design, an agent may use legitimate tools in unsafe ways, even without escalating privileges. This leads to data loss, exfiltration, workflow manipulation, and resource abuse.",
   "detection_patterns": [
-    "Agent can execute arbitrary tools",
-    "No authorization checks before tool execution",
-    "Tools have excessive permissions",
-    "No validation of tool inputs"
+    "Tools granted far more permissions than needed",
+    "Agents forwarding untrusted input directly to shell or DB tools",
+    "Unsafe browsing or federated requests",
+    "Looping behavior that causes DoS or runaway API costs",
+    "Malicious data that steers the agent toward harmful tool use",
+    "No authorization checks before tool execution"
   ],
   "attack_vectors": [
-    "Unauthorized tool execution",
-    "Privilege escalation via tools",
-    "Malicious tool invocation",
-    "Tool parameter manipulation"
+    "Fake or poisoned tool interfaces leading to bad decisions",
+    "PDF-based injection causing the agent to run scripts",
+    "Customer bots issuing refunds due to over-privileged APIs",
+    "Chaining internal tools with external services to exfiltrate data",
+    "Typosquatted tools redirecting sensitive output",
+    "Using normal admin utilities (PowerShell, curl) to evade EDR",
+    "Amazon Q Code Assistant (CVE-2025-8217): Destructive commands via compromised extension",
+    "Langflow AI RCE (CVE-2025-34291): Unauthenticated code injection",
+    "OpenAI Operator Data Exposure: Malicious webpage content tricking agent"
   ],
   "mitigations": [
     {
@@ -34,12 +41,56 @@
       "description": "Validate tool inputs",
       "implementation": "Validate and sanitize all inputs passed to tools.",
       "priority": "high"
+    },
+    {
+      "id": "human-approval-risky",
+      "description": "Human approval for risky actions",
+      "implementation": "Require explicit human approval for destructive or high-risk tool operations.",
+      "priority": "high"
+    },
+    {
+      "id": "network-allowlists",
+      "description": "Sandboxes and network allowlists for execution",
+      "implementation": "Restrict tool execution to allowlisted network endpoints.",
+      "priority": "high"
+    },
+    {
+      "id": "policy-enforcement",
+      "description": "Policy enforcement layers validating every action",
+      "implementation": "Implement policy engines that validate all tool invocations.",
+      "priority": "high"
+    },
+    {
+      "id": "adaptive-budgeting",
+      "description": "Adaptive budgeting and rate-limits",
+      "implementation": "Set budgets and rate limits to prevent resource abuse.",
+      "priority": "medium"
+    },
+    {
+      "id": "ephemeral-credentials",
+      "description": "Use ephemeral, just-in-time credentials",
+      "implementation": "Issue short-lived credentials for tool access.",
+      "priority": "medium"
+    },
+    {
+      "id": "monitoring-logs",
+      "description": "Strong monitoring and immutable logs",
+      "implementation": "Monitor all tool usage and maintain immutable audit logs.",
+      "priority": "high"
     }
   ],
   "references": [
     {
-      "title": "OWASP Agentic Top 10 - AGENTIC02: Insecure Tool Use",
+      "title": "OWASP Agentic Top 10 - AGENTIC02: Tool Misuse and Exploitation",
       "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "Amazon Q CVE-2025-8217",
+      "url": "https://embracethered.com/blog/posts/2025/amazon-q-developer-remote-code-execution/"
+    },
+    {
+      "title": "Langflow AI CVE-2025-34291",
+      "url": "https://www.obsidiansecurity.com/blog/cve-2025-34291-critical-account-takeover-and-rce-vulnerability-in-the-langflow-ai-agent-workflow-platform"
     }
   ]
 }

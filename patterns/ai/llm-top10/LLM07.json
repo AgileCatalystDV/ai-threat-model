@@ -1,0 +1,55 @@
+{
+  "id": "LLM07",
+  "category": "LLM07",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Insecure Plugin Design",
+  "description": "Insecure plugin design occurs when plugins or tools integrated with the LLM have security vulnerabilities. This includes plugins that execute arbitrary code, have excessive permissions, lack input validation, or can be exploited to perform unauthorized actions.",
+  "detection_patterns": [
+    "Plugins execute arbitrary code",
+    "No input validation in plugins",
+    "Plugins have excessive permissions",
+    "No sandboxing for plugin execution",
+    "Plugins can access sensitive resources",
+    "No plugin authentication or authorization"
+  ],
+  "attack_vectors": [
+    "Malicious plugin execution",
+    "Privilege escalation via plugins",
+    "Code injection through plugin inputs",
+    "Unauthorized resource access via plugins",
+    "Plugin-based data exfiltration",
+    "Remote code execution through plugins"
+  ],
+  "mitigations": [
+    {
+      "id": "plugin-security",
+      "description": "Implement secure plugin architecture",
+      "implementation": "Use sandboxing, implement least privilege, validate all plugin inputs, and restrict plugin capabilities to minimum required.",
+      "priority": "high"
+    },
+    {
+      "id": "plugin-authentication",
+      "description": "Authenticate and authorize plugins",
+      "implementation": "Implement plugin authentication, use allowlists for approved plugins, and verify plugin integrity before execution.",
+      "priority": "high"
+    },
+    {
+      "id": "input-validation",
+      "description": "Validate all plugin inputs",
+      "implementation": "Implement strict input validation, sanitization, and type checking for all plugin inputs and outputs.",
+      "priority": "high"
+    },
+    {
+      "id": "resource-isolation",
+      "description": "Isolate plugin resources",
+      "implementation": "Use containerization or sandboxing to isolate plugin execution and prevent access to unauthorized resources.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM07: Insecure Plugin Design",
+      "url": "https://genai.owasp.org/llm-top-10/llm07-insecure-plugin-design/"
+    }
+  ]
+}

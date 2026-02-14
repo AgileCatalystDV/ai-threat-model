@@ -62,7 +62,8 @@ class AgenticPlugin(ThreatModelPlugin):
                         patterns_dict[pattern.id] = pattern
                 except Exception as e:
                     # Log error but continue loading other patterns
-                    print(f"Warning: Failed to load pattern {pattern_file}: {e}")
+                    from ...utils.logging import log_pattern_load_error
+                    log_pattern_load_error(str(pattern_file), e)
         
         # Convert back to list
         self._patterns = list(patterns_dict.values())
@@ -74,8 +75,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC01",
                 category="AGENTIC01",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Agent Manipulation",
-                description="Agent manipulation occurs when attackers influence agent behavior through malicious inputs or environment manipulation.",
+                title="Agent Goal Hijack",
+                description="Goal hijacking targets the core of an agent: its ability to plan and act autonomously. If an attacker can redirect the goal itself, the entire chain of actions becomes compromised.",
                 detection_patterns=[
                     "Agent receives untrusted input without validation",
                     "No input sanitization for agent prompts",
@@ -105,8 +106,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC02",
                 category="AGENTIC02",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Insecure Tool Use",
-                description="Insecure tool use occurs when agents use tools or APIs without proper security controls.",
+                title="Tool Misuse and Exploitation",
+                description="Agents gain real-world power through the tools they can access. When misled through prompt injection, misalignment, or unsafe design, an agent may use legitimate tools in unsafe ways.",
                 detection_patterns=[
                     "Agent can execute arbitrary tools",
                     "No authorization checks before tool execution",
@@ -136,8 +137,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC03",
                 category="AGENTIC03",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Uncontrolled Agent Expansion",
-                description="Uncontrolled agent expansion occurs when agents can spawn new agents or resources without limits.",
+                title="Identity and Privilege Abuse",
+                description="Most agentic systems lack real, governable identities. Instead, agents inherit context, credentials, or privileges in ways traditional IAM systems were never designed for.",
                 detection_patterns=[
                     "Agents can spawn other agents",
                     "No limits on resource creation",
@@ -160,8 +161,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC04",
                 category="AGENTIC04",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Orchestration Manipulation",
-                description="Orchestration manipulation occurs when the agent orchestration layer is compromised or manipulated.",
+                title="Agentic Supply Chain Vulnerabilities",
+                description="Agentic systems don't run in isolation, they assemble models, tools, templates, plugins, and third-party agents at runtime. This creates a live, constantly shifting supply chain.",
                 detection_patterns=[
                     "Orchestrator has no access controls",
                     "Agent coordination can be manipulated",
@@ -184,8 +185,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC05",
                 category="AGENTIC05",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Insecure Memory Management",
-                description="Insecure memory management occurs when agent memory is not properly protected or validated.",
+                title="Unexpected Code Execution (RCE)",
+                description="Agents often call code execution tools—shells, runtimes, notebooks, scripts—to complete tasks. When an attacker manipulates those inputs, the agent can unintentionally execute arbitrary or malicious code.",
                 detection_patterns=[
                     "Memory accessible without authorization",
                     "No memory validation",
@@ -208,8 +209,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC06",
                 category="AGENTIC06",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Insufficient Agent Isolation",
-                description="Insufficient agent isolation occurs when agents can interfere with each other or access shared resources insecurely.",
+                title="Memory and Context Poisoning",
+                description="Agents use memory to store context, preferences, tasks, and past actions. If attackers can insert malicious content into that memory, the agent becomes permanently biased or compromised.",
                 detection_patterns=[
                     "Agents share resources without isolation",
                     "No sandboxing between agents",
@@ -232,8 +233,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC07",
                 category="AGENTIC07",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Insecure Communication",
-                description="Insecure communication occurs when agents communicate without proper encryption or authentication.",
+                title="Insecure Inter-Agent Communication",
+                description="Multi-agent systems rely entirely on messages to coordinate. If those messages aren't authenticated, encrypted, or validated, a single spoofed or tampered instruction can mislead multiple agents.",
                 detection_patterns=[
                     "Agent communication not encrypted",
                     "No authentication between agents",
@@ -256,8 +257,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC08",
                 category="AGENTIC08",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Insufficient Observability",
-                description="Insufficient observability occurs when agent behavior cannot be monitored or audited.",
+                title="Cascading Failures",
+                description="Agentic systems are deeply interconnected. One bad output, whether a hallucination, malicious input, or poisoned memory, can ripple across multiple agents and workflows.",
                 detection_patterns=[
                     "No logging of agent actions",
                     "No monitoring of agent behavior",
@@ -280,8 +281,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC09",
                 category="AGENTIC09",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Insecure Agent Deployment",
-                description="Insecure agent deployment occurs when agents are deployed without proper security controls.",
+                title="Human-Agent Trust Exploitation",
+                description="Agents generate polished, authoritative-sounding explanations. Humans tend to trust them—even when they're compromised or manipulated.",
                 detection_patterns=[
                     "Agents deployed without authentication",
                     "No secure deployment process",
@@ -304,8 +305,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 id="AGENTIC10",
                 category="AGENTIC10",
                 framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
-                title="Supply Chain Vulnerabilities",
-                description="Supply chain vulnerabilities occur when third-party agents, models, or tools contain security flaws.",
+                title="Rogue Agents",
+                description="A Rogue Agent is an AI that drifts from its intended behavior and acts with harmful autonomy. It becomes the ultimate insider threat: authorized, trusted, but misaligned.",
                 detection_patterns=[
                     "Third-party agents used without verification",
                     "External models or tools integrated",
@@ -427,7 +428,8 @@ class AgenticPlugin(ThreatModelPlugin):
                 return True
 
         component_types = [component.type.value] if component.type in agentic_risk_patterns else []
-        return pattern_matches_component(pattern, component, component_types)
+        # Use enhanced pattern matching with system context
+        return pattern_matches_component(pattern, component, component_types, system)
 
     def _create_threat_from_pattern(self, pattern: ThreatPattern, component: Component, system: SystemModel) -> Threat:
         """Create a Threat object from a pattern."""

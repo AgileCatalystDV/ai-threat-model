@@ -1,0 +1,55 @@
+{
+  "id": "LLM08",
+  "category": "LLM08",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Excessive Agency",
+  "description": "Excessive agency occurs when the LLM has too much autonomy and can perform actions without proper authorization or human oversight. This can lead to unauthorized actions, privilege escalation, or unintended consequences from autonomous LLM decisions.",
+  "detection_patterns": [
+    "LLM can perform critical actions autonomously",
+    "No human oversight or approval",
+    "Broad permissions granted to LLM",
+    "LLM can modify system state without validation",
+    "No action confirmation for sensitive operations",
+    "LLM has administrative privileges"
+  ],
+  "attack_vectors": [
+    "Unauthorized actions via LLM",
+    "Privilege escalation",
+    "Autonomous malicious actions",
+    "Bypassing security controls through LLM",
+    "LLM-initiated attacks on other systems",
+    "Unintended consequences from autonomous decisions"
+  ],
+  "mitigations": [
+    {
+      "id": "human-oversight",
+      "description": "Implement human oversight for critical actions",
+      "implementation": "Require human approval for sensitive operations, implement confirmation workflows, and maintain audit logs of all LLM actions.",
+      "priority": "high"
+    },
+    {
+      "id": "least-privilege",
+      "description": "Apply least privilege principle",
+      "implementation": "Grant LLM only minimum required permissions, restrict access to sensitive resources, and implement role-based access control.",
+      "priority": "high"
+    },
+    {
+      "id": "action-validation",
+      "description": "Validate all LLM actions",
+      "implementation": "Implement action validation, use allowlists for permitted actions, and verify action context before execution.",
+      "priority": "high"
+    },
+    {
+      "id": "audit-logging",
+      "description": "Maintain comprehensive audit logs",
+      "implementation": "Log all LLM actions, decisions, and outcomes for security monitoring and incident response.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM08: Excessive Agency",
+      "url": "https://genai.owasp.org/llm-top-10/llm08-excessive-agency/"
+    }
+  ]
+}

@@ -62,7 +62,8 @@ class LLMPlugin(ThreatModelPlugin):
                         patterns_dict[pattern.id] = pattern
                 except Exception as e:
                     # Log error but continue loading other patterns
-                    print(f"Warning: Failed to load pattern {pattern_file}: {e}")
+                    from ...utils.logging import log_pattern_load_error
+                    log_pattern_load_error(str(pattern_file), e)
         
         # Convert back to list
         self._patterns = list(patterns_dict.values())
@@ -389,7 +390,8 @@ class LLMPlugin(ThreatModelPlugin):
                 return True
             component_types = [component.type.value]
 
-        return pattern_matches_component(pattern, component, component_types)
+        # Use enhanced pattern matching with system context
+        return pattern_matches_component(pattern, component, component_types, system)
 
     def _create_threat_from_pattern(self, pattern: ThreatPattern, component: Component, system: SystemModel) -> Threat:
         """Create a Threat object from a pattern."""

@@ -1,0 +1,55 @@
+{
+  "id": "LLM06",
+  "category": "LLM06",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Sensitive Information Disclosure",
+  "description": "Sensitive information disclosure occurs when the LLM reveals confidential data in its outputs. This can happen through training data memorization, inference attacks, prompt engineering to extract data, or accidental exposure of sensitive information in responses.",
+  "detection_patterns": [
+    "Training data contains sensitive information",
+    "No data filtering or redaction",
+    "LLM has access to sensitive data sources",
+    "No output filtering for sensitive data",
+    "Training data includes PII or confidential information",
+    "No differential privacy or data anonymization"
+  ],
+  "attack_vectors": [
+    "Prompting for sensitive data",
+    "Inference attacks to extract training data",
+    "Membership inference attacks",
+    "Model inversion attacks",
+    "Data extraction via prompt engineering",
+    "Accidental PII disclosure in outputs"
+  ],
+  "mitigations": [
+    {
+      "id": "data-filtering",
+      "description": "Filter sensitive data from training and inference",
+      "implementation": "Implement data redaction, PII detection and removal, and output filtering to prevent sensitive data disclosure.",
+      "priority": "high"
+    },
+    {
+      "id": "differential-privacy",
+      "description": "Use differential privacy techniques",
+      "implementation": "Apply differential privacy to training data and model outputs to prevent inference attacks.",
+      "priority": "high"
+    },
+    {
+      "id": "output-filtering",
+      "description": "Filter outputs for sensitive information",
+      "implementation": "Implement output scanning and filtering to detect and redact sensitive data before returning responses.",
+      "priority": "high"
+    },
+    {
+      "id": "access-controls",
+      "description": "Limit access to sensitive data sources",
+      "implementation": "Implement least privilege access controls and data isolation to prevent LLM from accessing unnecessary sensitive data.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM06: Sensitive Information Disclosure",
+      "url": "https://genai.owasp.org/llm-top-10/llm06-sensitive-information-disclosure/"
+    }
+  ]
+}

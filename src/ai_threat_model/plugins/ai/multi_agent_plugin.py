@@ -64,7 +64,8 @@ class MultiAgentPlugin(ThreatModelPlugin):
                         pattern = ThreatPattern(**data)
                         patterns_dict[pattern.id] = pattern
                 except Exception as e:
-                    print(f"Warning: Failed to load pattern {pattern_file}: {e}")
+                    from ...utils.logging import log_pattern_load_error
+                    log_pattern_load_error(str(pattern_file), e)
 
         self._patterns = list(patterns_dict.values())
 

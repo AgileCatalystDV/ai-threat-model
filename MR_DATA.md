@@ -278,6 +278,16 @@ Dit project is ontstaan uit filosofische reflecties over:
 - **OWASP AIBOM Generator:** https://owaspaibom.org/
 - **MCP Security Cheat Sheet:** https://genai.owasp.org/resource/cheatsheet-a-practical-guide-for-securely-using-third-party-mcp-servers-1-0/
 
+### PLOT4AI Resources
+
+- **PLOT4AI Website:** https://plot4.ai/
+- **PLOT4AI Library:** https://plot4.ai/library
+- **PLOT4AI GitHub:** https://github.com/PLOT4ai/plot4ai-library
+- **PLOT4AI License:** CC-BY-SA-4.0 (Creative Commons Attribution-ShareAlike 4.0)
+- **PLOT4AI Author:** Isabel Barberá
+- **CNIL AI Assessment Tools:** https://www.cnil.fr/en/ai-systems-compliance-other-guides-tools-and-best-practices
+- **OECD Tools Catalogue:** https://oecd.ai/en/catalogue/tools/plot4ai
+
 ### Threat Modeling Tools (Inspiratie)
 
 - **AWS Threat Composer:** https://github.com/awslabs/threat-composer

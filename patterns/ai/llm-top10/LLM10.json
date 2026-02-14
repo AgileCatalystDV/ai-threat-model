@@ -1,0 +1,61 @@
+{
+  "id": "LLM10",
+  "category": "LLM10",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Model Theft",
+  "description": "Model theft occurs when proprietary models are copied, reverse-engineered, or extracted without authorization. Attackers can use model extraction attacks, API abuse, or unauthorized access to steal model weights, architecture, or training data.",
+  "detection_patterns": [
+    "Model exposed via API without protection",
+    "No access controls on model endpoints",
+    "Model weights accessible",
+    "No rate limiting on model queries",
+    "Excessive API access allowed",
+    "No monitoring for extraction attempts"
+  ],
+  "attack_vectors": [
+    "Model extraction attacks",
+    "Unauthorized model access",
+    "API abuse for model cloning",
+    "Reverse engineering via API queries",
+    "Training data extraction",
+    "Model weight theft"
+  ],
+  "mitigations": [
+    {
+      "id": "access-controls",
+      "description": "Implement access controls and monitoring",
+      "implementation": "Use authentication, authorization, rate limiting, and monitor for suspicious access patterns that indicate extraction attempts.",
+      "priority": "high"
+    },
+    {
+      "id": "api-protection",
+      "description": "Protect model APIs",
+      "implementation": "Implement API keys, authentication tokens, IP allowlisting, and detect anomalous query patterns.",
+      "priority": "high"
+    },
+    {
+      "id": "output-obfuscation",
+      "description": "Obfuscate model outputs",
+      "implementation": "Add noise to outputs, limit response precision, and use output rounding to make extraction more difficult.",
+      "priority": "medium"
+    },
+    {
+      "id": "extraction-detection",
+      "description": "Detect model extraction attempts",
+      "implementation": "Monitor for extraction patterns such as large numbers of diverse queries, systematic exploration, or unusual access patterns.",
+      "priority": "medium"
+    },
+    {
+      "id": "legal-protection",
+      "description": "Implement legal protections",
+      "implementation": "Use terms of service, licensing agreements, and legal measures to protect intellectual property.",
+      "priority": "low"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM10: Model Theft",
+      "url": "https://genai.owasp.org/llm-top-10/llm10-model-theft/"
+    }
+  ]
+}

@@ -87,3 +87,14 @@ def load_plugins() -> None:
         # Plugins not yet implemented or import error
         import warnings
         warnings.warn(f"Failed to load some plugins: {e}", ImportWarning)
+
+    # Register PLOT4AI plugin (works for all AI types)
+    try:
+        from .ai.plot4ai_plugin import Plot4AIPlugin
+
+        plot4ai_plugin = Plot4AIPlugin()
+        # Register for LLM_APP (can be used for other types too)
+        PluginRegistry.register(plot4ai_plugin)
+    except ImportError as e:
+        import warnings
+        warnings.warn(f"Failed to load PLOT4AI plugin: {e}", ImportWarning)

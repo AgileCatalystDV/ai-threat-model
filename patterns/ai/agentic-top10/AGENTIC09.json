@@ -1,0 +1,88 @@
+{
+  "id": "AGENTIC09",
+  "category": "AGENTIC09",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Human-Agent Trust Exploitation",
+  "description": "Agents generate polished, authoritative-sounding explanations. Humans tend to trust them—even when they're compromised or manipulated. Human-in-the-loop controls assume the human can detect when something is wrong. But a manipulated agent presents malicious actions with perfect confidence and coherent justification. The approval prompt becomes a rubber stamp.",
+  "detection_patterns": [
+    "Users can't verify opaque or shallow 'explanations'",
+    "Agents generate fake but convincing rationales",
+    "No confirmation step for high-risk actions",
+    "Agents evoke emotional trust that bypasses normal skepticism",
+    "Automation bias where humans defer to AI recommendations"
+  ],
+  "attack_vectors": [
+    "A coding assistant suggests a malicious 'fix' that installs a backdoor",
+    "A poisoned IT support agent harvests new-hire credentials",
+    "A finance agent fabricates a rationale to approve a fraudulent payment",
+    "A hijacked agent convinces an analyst to delete a production database",
+    "A 'preview' UI secretly triggers side-effect actions in the background",
+    "M365 Copilot Manipulation: Attackers manipulate Copilot to influence users toward ill-advised decisions",
+    "AI Reward Hacking: Agents optimize for metrics in unintended ways that harm users",
+    "Agent-Driven Phishing: Advanced phishing via agent-driven chatbots with deepfake audio"
+  ],
+  "mitigations": [
+    {
+      "id": "mandatory-confirmations",
+      "description": "Mandatory confirmations for sensitive or irreversible actions",
+      "implementation": "Require explicit user confirmation for high-risk operations.",
+      "priority": "high"
+    },
+    {
+      "id": "adaptive-oversight",
+      "description": "Adaptive oversight that increases when risk is high",
+      "implementation": "Scale human oversight based on risk level of the operation.",
+      "priority": "high"
+    },
+    {
+      "id": "provenance-metadata",
+      "description": "Provenance metadata and signature checks on all agent outputs",
+      "implementation": "Include metadata showing where recommendations come from.",
+      "priority": "medium"
+    },
+    {
+      "id": "preview-execute-separation",
+      "description": "Clear separation between 'preview' and 'execute'",
+      "implementation": "Ensure preview modes cannot trigger side effects.",
+      "priority": "high"
+    },
+    {
+      "id": "immutable-audit-logs",
+      "description": "Immutable audit logs for investigation",
+      "implementation": "Maintain tamper-proof logs of all agent recommendations and user approvals.",
+      "priority": "high"
+    },
+    {
+      "id": "user-training",
+      "description": "Training programs to reduce automation bias and emotional trust",
+      "implementation": "Educate users to question AI recommendations, especially on YMYL (your-money-or-your-life) issues.",
+      "priority": "medium"
+    },
+    {
+      "id": "transparency-uncertainty",
+      "description": "Add transparency about AI uncertainty",
+      "implementation": "Show confidence levels and uncertainty in agent recommendations.",
+      "priority": "medium"
+    },
+    {
+      "id": "independent-verification",
+      "description": "Require independent verification for high-impact decisions",
+      "implementation": "Implement human-in-the-loop controls with clear escalation paths.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC09: Human-Agent Trust Exploitation",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "M365 Copilot Manipulation Research",
+      "url": "https://labs.zenity.io/p/links-materials-living-off-microsoft-copilot"
+    },
+    {
+      "title": "AI Reward Hacking",
+      "url": "https://www.anthropic.com/research/emergent-misalignment-reward-hacking"
+    }
+  ]
+}

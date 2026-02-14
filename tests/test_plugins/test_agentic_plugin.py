@@ -56,6 +56,64 @@ class TestAgenticPlugin:
 
     def test_detect_threats_with_agent_component(self):
         """Test threat detection with agent component."""
+        agent_component = Component(
+            id="agent1",
+            name="Research Agent",
+            type=ComponentType.AGENT,
+            capabilities=["web-search", "document-analysis"],
+            trust_level=TrustLevel.INTERNAL,
+        )
+        system = SystemModel(
+            name="Test Agentic System",
+            type=SystemType.AGENTIC_SYSTEM,
+            threat_modeling_framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
+            components=[agent_component],
+        )
+
+        threats = self.plugin.detect_threats(system)
+        assert len(threats) > 0
+        threat_categories = [t.category for t in threats]
+        assert any(cat.startswith("AGENTIC") for cat in threat_categories)
+
+    def test_detect_threats_with_tool_component(self):
+        """Test threat detection with tool component."""
+        tool_component = Component(
+            id="tool1",
+            name="File System Tool",
+            type=ComponentType.TOOL,
+            capabilities=["read-file", "write-file", "execute"],
+            trust_level=TrustLevel.INTERNAL,
+        )
+        system = SystemModel(
+            name="Test Agentic System",
+            type=SystemType.AGENTIC_SYSTEM,
+            threat_modeling_framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
+            components=[tool_component],
+        )
+
+        threats = self.plugin.detect_threats(system)
+        # Should detect AGENTIC02 (Tool Misuse) based on tool capabilities
+        assert len(threats) > 0
+
+    def test_detect_threats_with_excessive_agency(self):
+        """Test threat detection for excessive agency."""
+        agent_component = Component(
+            id="agent1",
+            name="Autonomous Trading Agent",
+            type=ComponentType.AGENT,
+            capabilities=["execute-trades", "manage-portfolio", "risk-assessment"],
+            trust_level=TrustLevel.PRIVILEGED,
+        )
+        system = SystemModel(
+            name="Test Agentic System",
+            type=SystemType.AGENTIC_SYSTEM,
+            threat_modeling_framework=ThreatModelingFramework.OWASP_AGENTIC_TOP10_2026,
+            components=[agent_component],
+        )
+
+        threats = self.plugin.detect_threats(system)
+        # Should detect AGENTIC09 (Human-Agent Trust Exploitation) or AGENTIC08 (Excessive Agency)
+        assert len(threats) > 0
         agent = Component(
             id="agent1",
             name="Research Agent",

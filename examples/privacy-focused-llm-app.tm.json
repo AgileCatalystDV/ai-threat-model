@@ -1,0 +1,222 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2025-02-07T10:00:00Z",
+    "updated": "2026-02-07T20:00:00Z",
+    "author": "Privacy Engineering Team",
+    "description": "Privacy-focused LLM application for handling personal data with GDPR compliance and PLOT4AI framework"
+  },
+  "system": {
+    "name": "Privacy-First Personal Assistant LLM",
+    "type": "llm-app",
+    "threat_modeling_framework": "plot4ai",
+    "components": [
+      {
+        "id": "user-frontend",
+        "name": "User Frontend",
+        "type": "web-server",
+        "capabilities": [
+          "user-input",
+          "display-output",
+          "privacy-settings"
+        ],
+        "trust_level": "untrusted",
+        "description": "Web frontend for user interaction with privacy controls"
+      },
+      {
+        "id": "privacy-gateway",
+        "name": "Privacy Gateway",
+        "type": "api-endpoint",
+        "capabilities": [
+          "pii-detection",
+          "data-redaction",
+          "consent-management",
+          "anonymization"
+        ],
+        "trust_level": "internal",
+        "description": "Privacy gateway for PII detection and data redaction before LLM processing"
+      },
+      {
+        "id": "llm-service",
+        "name": "Privacy-Aware LLM Service",
+        "type": "llm",
+        "capabilities": [
+          "text-generation",
+          "conversation",
+          "privacy-preserving-inference"
+        ],
+        "trust_level": "internal",
+        "description": "LLM service with privacy-preserving capabilities and differential privacy"
+      },
+      {
+        "id": "user-data-store",
+        "name": "User Data Store",
+        "type": "database",
+        "capabilities": [
+          "store-user-preferences",
+          "store-conversation-history",
+          "store-consent-records"
+        ],
+        "trust_level": "internal",
+        "description": "Encrypted database for storing user data with retention policies"
+      },
+      {
+        "id": "consent-manager",
+        "name": "Consent Management Service",
+        "type": "api-endpoint",
+        "capabilities": [
+          "manage-consent",
+          "track-data-usage",
+          "handle-data-requests",
+          "gdpr-compliance"
+        ],
+        "trust_level": "internal",
+        "description": "Service for managing user consent and GDPR data subject rights"
+      },
+      {
+        "id": "anonymization-service",
+        "name": "Data Anonymization Service",
+        "type": "api-endpoint",
+        "capabilities": [
+          "anonymize-data",
+          "pseudonymization",
+          "k-anonymity",
+          "differential-privacy"
+        ],
+        "trust_level": "internal",
+        "description": "Service for anonymizing and pseudonymizing personal data"
+      },
+      {
+        "id": "audit-logger",
+        "name": "Privacy Audit Logger",
+        "type": "api-endpoint",
+        "capabilities": [
+          "log-data-access",
+          "log-consent-changes",
+          "log-data-processing",
+          "compliance-reporting"
+        ],
+        "trust_level": "system",
+        "description": "Comprehensive audit logging for privacy compliance and GDPR accountability"
+      },
+      {
+        "id": "external-llm-api",
+        "name": "External LLM API",
+        "type": "api-endpoint",
+        "capabilities": [
+          "text-generation",
+          "conversation"
+        ],
+        "trust_level": "untrusted",
+        "description": "Third-party LLM API (e.g., OpenAI) - data must be anonymized before sending"
+      }
+    ],
+    "data_flows": [
+      {
+        "from": "user-frontend",
+        "to": "privacy-gateway",
+        "data_type": "user-input",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-gateway",
+        "to": "consent-manager",
+        "data_type": "consent-check",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-gateway",
+        "to": "anonymization-service",
+        "data_type": "personal-data",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "anonymization-service",
+        "to": "privacy-gateway",
+        "data_type": "anonymized-data",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-gateway",
+        "to": "llm-service",
+        "data_type": "anonymized-prompt",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "llm-service",
+        "to": "external-llm-api",
+        "data_type": "anonymized-request",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "external-llm-api",
+        "to": "llm-service",
+        "data_type": "llm-response",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "llm-service",
+        "to": "privacy-gateway",
+        "data_type": "processed-response",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-gateway",
+        "to": "user-frontend",
+        "data_type": "privacy-filtered-response",
+        "classification": "confidential",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "privacy-gateway",
+        "to": "user-data-store",
+        "data_type": "user-preferences",
+        "classification": "confidential",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "consent-manager",
+        "to": "user-data-store",
+        "data_type": "consent-records",
+        "classification": "restricted",
+        "protocol": "TCP",
+        "encrypted": false
+      },
+      {
+        "from": "privacy-gateway",
+        "to": "audit-logger",
+        "data_type": "data-access-log",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      },
+      {
+        "from": "consent-manager",
+        "to": "audit-logger",
+        "data_type": "consent-log",
+        "classification": "internal",
+        "protocol": "HTTPS",
+        "encrypted": true
+      }
+    ]
+  },
+  "threats": []
+}

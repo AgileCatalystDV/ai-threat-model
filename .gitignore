@@ -89,3 +89,7 @@ Thumbs.db
 # Project specific
 my-*.tm.json
 *.tm.json.bak
+
+# Docker
+.docker/
+docker-compose.override.yml

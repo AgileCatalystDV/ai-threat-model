@@ -1,0 +1,54 @@
+{
+  "id": "LLM04",
+  "category": "LLM04",
+  "framework": "owasp-llm-top10-2025",
+  "title": "Model Denial of Service",
+  "description": "Model Denial of Service (DoS) occurs when resource-intensive operations cause the system to become unavailable or degrade performance. Attackers can exploit this by sending large prompts, rapid requests, or resource-intensive queries that exhaust system resources.",
+  "detection_patterns": [
+    "No rate limiting on LLM requests",
+    "No timeout mechanisms",
+    "No resource quotas",
+    "No request size limits",
+    "No concurrent request limits",
+    "Unlimited token generation"
+  ],
+  "attack_vectors": [
+    "Resource exhaustion via large prompts",
+    "Rapid request flooding",
+    "Token generation attacks",
+    "Memory exhaustion through long conversations",
+    "CPU exhaustion via complex queries"
+  ],
+  "mitigations": [
+    {
+      "id": "rate-limiting",
+      "description": "Implement rate limiting",
+      "implementation": "Use rate limiting middleware to restrict requests per user/IP. Implement sliding window or token bucket algorithms.",
+      "priority": "high"
+    },
+    {
+      "id": "timeout-mechanisms",
+      "description": "Implement request timeouts",
+      "implementation": "Set maximum request processing time and terminate long-running requests. Implement circuit breakers for degraded service.",
+      "priority": "high"
+    },
+    {
+      "id": "resource-quotas",
+      "description": "Enforce resource quotas",
+      "implementation": "Limit tokens per request, total tokens per session, and concurrent requests per user.",
+      "priority": "high"
+    },
+    {
+      "id": "request-size-limits",
+      "description": "Limit request and response sizes",
+      "implementation": "Enforce maximum prompt length and response size limits to prevent resource exhaustion.",
+      "priority": "medium"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP LLM Top 10 - LLM04: Model Denial of Service",
+      "url": "https://genai.owasp.org/llm-top-10/llm04-model-denial-of-service/"
+    }
+  ]
+}

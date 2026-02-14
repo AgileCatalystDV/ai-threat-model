@@ -1,0 +1,70 @@
+{
+  "id": "AGENTIC04",
+  "category": "AGENTIC04",
+  "framework": "owasp-agentic-top10-2026",
+  "title": "Agentic Supply Chain Vulnerabilities",
+  "description": "Agentic systems don't run in isolation, they assemble models, tools, templates, plugins, and third-party agents at runtime. This creates a live, constantly shifting supply chain. If any component in that chain is malicious or tampered with, the entire agent can be silently redirected, poisoned, or exploited.",
+  "detection_patterns": [
+    "Remote prompt templates that include hidden instructions",
+    "Tool descriptors or agent cards embedding malicious metadata",
+    "Look-alike or typo-squatted tools impersonating legitimate services",
+    "Third-party agents with unpatched flaws joining multi-agent workflows",
+    "Compromised MCP servers or registries serving altered components",
+    "Poisoned RAG indexes feeding agents manipulated context"
+  ],
+  "attack_vectors": [
+    "Amazon Q VS Code extension nearly shipped a poisoned prompt",
+    "Malicious MCP server impersonated Postmark and secretly forwarded emails",
+    "Agent-in-the-middle attacks where fake agents advertise inflated capabilities",
+    "Typosquatted tools that hijack workflows or inject unauthorized commands",
+    "RAG plugins pulling manipulated entries that gradually bias an agent's behavior"
+  ],
+  "mitigations": [
+    {
+      "id": "verify-components",
+      "description": "Verify every component: models, tools, templates, agent cards, and registries",
+      "implementation": "Implement verification and integrity checks for all runtime-loaded components.",
+      "priority": "high"
+    },
+    {
+      "id": "signed-manifests",
+      "description": "Use signed manifests and integrity checks for anything loaded at runtime",
+      "implementation": "Require cryptographic signatures and integrity verification for all dynamic dependencies.",
+      "priority": "high"
+    },
+    {
+      "id": "sandbox-untrusted",
+      "description": "Sandbox untrusted or unverified tools before workflow access",
+      "implementation": "Isolate and test untrusted components in sandboxed environments before production use.",
+      "priority": "high"
+    },
+    {
+      "id": "vetted-allowlist",
+      "description": "Keep a vetted allowlist of approved third-party tools and agents",
+      "implementation": "Maintain and enforce an allowlist of verified, trusted components.",
+      "priority": "medium"
+    },
+    {
+      "id": "monitor-registries",
+      "description": "Continuously monitor MCP servers, registries, and plugin sources for tampering",
+      "implementation": "Implement monitoring and alerting for changes in component registries and sources.",
+      "priority": "medium"
+    },
+    {
+      "id": "untrusted-by-default",
+      "description": "Treat all dynamic dependencies as untrusted until validated",
+      "implementation": "Apply zero-trust principles to all runtime-loaded components.",
+      "priority": "high"
+    }
+  ],
+  "references": [
+    {
+      "title": "OWASP Agentic Top 10 - AGENTIC04: Agentic Supply Chain Vulnerabilities",
+      "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "CISA Advisory: npm Supply Chain Attack",
+      "url": "https://www.cisa.gov/news-events/alerts/2025/09/23/widespread-supply-chain-compromise-impacting-npm-ecosystem"
+    }
+  ]
+}

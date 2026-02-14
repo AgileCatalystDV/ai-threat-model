@@ -2,19 +2,24 @@
   "id": "AGENTIC01",
   "category": "AGENTIC01",
   "framework": "owasp-agentic-top10-2026",
-  "title": "Agent Manipulation",
-  "description": "Agent manipulation occurs when attackers influence agent behavior through malicious inputs or environment manipulation. This can lead to unauthorized actions or data exposure.",
+  "title": "Agent Goal Hijack",
+  "description": "Goal hijacking targets the core of an agent: its ability to plan and act autonomously. If an attacker can redirect the goal itself, the entire chain of actions becomes compromised. Because agents rely on natural-language input, they often cannot tell the difference between valid instructions and malicious ones. This makes it possible for attackers to rewrite objectives, influence planning, or steer decisions through prompt manipulation, poisoned data, or deceptive tool outputs.",
   "detection_patterns": [
+    "Hidden instructions inside RAG-retrieved pages",
+    "Malicious emails or invites that silently modify agent instructions",
+    "Direct prompt overrides pushing financial or operational misuse",
+    "Covert instruction changes that lead to disinformation or risky business decisions",
     "Agent receives untrusted input without validation",
-    "No input sanitization for agent prompts",
-    "Agent state can be manipulated externally",
-    "No validation of agent decisions"
+    "No input sanitization for agent prompts"
   ],
   "attack_vectors": [
-    "Prompt injection to manipulate agent behavior",
-    "Environment manipulation",
-    "State corruption attacks",
-    "Goal hijacking"
+    "Zero-click indirect injections in email content triggering harmful actions",
+    "Malicious websites feeding instructions that cause data exposure",
+    "Scheduled prompts that subtly shift an agent's planning priorities",
+    "Poisoned documents instructing ChatGPT to exfiltrate data",
+    "EchoLeak (CVE-2025-32711): Zero-click prompt injection in Microsoft 365 Copilot",
+    "GitHub Copilot YOLO Mode (CVE-2025-53773): Wormable RCE via prompt injection",
+    "AGENTS.MD Hijacking in VS Code (CVE-2025-64660, CVE-2025-61590)"
   ],
   "mitigations": [
     {
@@ -30,16 +35,42 @@
       "priority": "high"
     },
     {
-      "id": "decision-validation",
-      "description": "Validate agent decisions before execution",
-      "implementation": "Implement decision validation and approval workflows for critical actions.",
+      "id": "lock-system-prompts",
+      "description": "Lock system prompts and require human approval for goal-changing actions",
+      "implementation": "Protect system prompts from modification and require approval for goal changes.",
+      "priority": "high"
+    },
+    {
+      "id": "re-validate-intent",
+      "description": "Re-validate intent before executing high-impact tasks",
+      "implementation": "Verify user intent before executing critical operations.",
+      "priority": "high"
+    },
+    {
+      "id": "sanitize-external-data",
+      "description": "Sanitize all external data sources",
+      "implementation": "Filter and sanitize all external content before agent processing.",
+      "priority": "high"
+    },
+    {
+      "id": "monitor-goal-drift",
+      "description": "Continuously monitor for unexpected goal drift",
+      "implementation": "Monitor agent behavior for signs of goal misalignment.",
       "priority": "medium"
     }
   ],
   "references": [
     {
-      "title": "OWASP Agentic Top 10 - AGENTIC01: Agent Manipulation",
+      "title": "OWASP Agentic Top 10 - AGENTIC01: Agent Goal Hijack",
       "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "title": "EchoLeak CVE-2025-32711",
+      "url": "https://arxiv.org/html/2509.10540v1"
+    },
+    {
+      "title": "GitHub Copilot YOLO Mode CVE-2025-53773",
+      "url": "https://embracethered.com/blog/posts/2025/github-copilot-remote-code-execution-via-prompt-injection/"
     }
   ]
 }

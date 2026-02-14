@@ -110,6 +110,7 @@ Framework-Specific Patterns (OWASP LLM Top 10, STRIDE, etc.)
 
 - OWASP LLM Top 10 2025
 - OWASP Agentic Top 10 2026
+- PLOT4AI (138 threats across 8 categories - privacy, ethics, bias, transparency)
 - OWASP Top 10 2021 (planned)
 - OWASP Mobile Top 10 (planned)
 - OWASP API Top 10 (planned)
@@ -176,6 +177,7 @@ Dit project is bedoeld voor contributie aan OWASP GenAI Security Project. We vol
 - [OWASP LLM Top 10 2025](https://genai.owasp.org/llm-top-10/)
 - [OWASP Agentic Top 10 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
 - [Multi-Agent Threat Modeling Guide](https://genai.owasp.org/resource/multi-agentic-system-threat-modeling-guide-v1-0/)
+- [PLOT4AI](https://plot4.ai/) - Holistic AI threat modeling (privacy, ethics, bias, transparency)
 
 ## License
 
